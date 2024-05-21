@@ -1,0 +1,37 @@
+{% extends 'themes/base_admin.html.twig' %}
+
+{% block title %}Modification d'une catégorie{% endblock %}
+
+{% block description %}Modification d'une catégorie de Green Gardians{% endblock %}
+
+{% block keywords %}Admin, Administration, Catégories{% endblock %}
+
+{% block main %}
+
+    <h2 class="text-center m-5">Modification d'une catégorie</h2>
+    <div class="container">
+
+        {{ form_start(formCategory) }}
+
+            <div class="mb-3">
+                <label for="">Nom de catégorie<strong class="text-danger">*</strong></label>
+                <div class="text-danger">{{ form_errors(formCategory.name) }}</div>
+                {{ form_widget(formCategory.name, {"attr": {"class":"form-control", "autofocus":"autofocus"}})}}
+            </div>
+
+            <div class="mb-3">
+                <label for="">Description</label>
+                <div class="text-danger">{{ form_errors(formCategory.description) }}</div>
+                {{ form_widget(formCategory.description, {"attr": {"class":"form-control"}})}}
+            </div>
+
+            <div class="mb-3">
+                <input formnovalidate type="submit" class="btn btn-success shadow w-100" value="Ajouter la catégorie">
+            </div> 
+
+        {{ form_end(formCategory) }}
+
+    </div>
+
+
+{% endblock %} 

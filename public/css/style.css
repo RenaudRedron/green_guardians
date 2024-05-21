@@ -1,0 +1,328 @@
+/* Affecte tout le code */
+a {
+    text-decoration-line: none;
+}
+
+* {
+    font-family: "Poppins", sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.nav_text_logo, footer p {
+    font-family: "Pacifico", cursive;
+}
+
+/* ---------------------------------------------------------------- */
+/* -------------------------- NAV --------------------------------- */
+/* ---------------------------------------------------------------- */
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    height: 70px;
+    align-items: center;
+}
+
+.nav_bg_green {
+    background-color: #528750e7;
+
+}
+
+@media only screen and (max-width: 991px) {
+    .navbar-collapse {
+        margin-top:10px
+    }
+    .navbar-collapse-home {
+        background-color: #528750;
+        margin-top:10px;
+        width: 100%;
+    }
+}
+
+.nav_img_logo {
+    height: 67px;
+    left: 25px;
+}
+
+.nav_text_logo {
+    display: flex;
+    color: white;
+    height: 50px;
+    align-items: center;
+    margin-left: 45px;
+    padding-left: 50px;
+    padding-right: 25px;
+    font-size: 25px;
+    min-width: 250px;
+}
+
+.nav_a {
+    color: white;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    border-radius: 30px;
+    margin: 10px 20px;
+}
+
+.nav_a:hover {
+    background-color: #70ae6d;
+    color: white;
+}
+
+@media only screen and (max-width: 991px) {
+    .nav_a:hover {
+        background-color: transparent;
+    }
+}
+
+
+.nav_link_connexion {
+    color: #70ae6d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 30px;
+    margin: 10px 20px;
+}
+
+.nav_link_connexion:hover {
+    color: #70ae6d;
+    background-color: white;
+}
+
+.navbar .navbar-toggler{
+    border: none;
+}
+
+.navbar .navbar-toggler-icon{
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+.navbar .navbar-toggler:focus {
+    box-shadow:none
+}
+
+.title-top {
+    margin-top: 55px;
+}
+
+/* ---------------------------------------------------------------- */
+/* -------------------------- MAIN -------------------------------- */
+/* ---------------------------------------------------------------- */
+
+#map {
+    height: 750px;
+    border-bottom: #528750 solid 1px;
+}
+
+.main_article {
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
+    justify-content: center;
+    align-items: center;
+}
+
+.main_article_container {
+    display: flex;
+    width: 90%;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.main_article_flex_item_left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 30%;
+    min-width: 350px;
+    max-width: 350px;
+
+}
+
+.main_article_flex_item_left img {
+    width: 80%;
+    margin: 20px;
+}
+
+.main_article_item_right_flex_container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 70%;
+    min-width: 350px;
+
+}
+
+.main_article_flex_container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+}
+
+.main_article_flex_content_h2 {
+    color:#528750;
+    font-size: 25px;
+}
+
+.main_article_item_right_flex_content_div {
+    color:#282828;
+    font-size: 14px;
+    line-height:1.2rem;
+    margin: 5px 0;
+    flex:1
+}
+
+.main_article_item_right_flex_content_p {
+    color:#282828;
+    font-size: 16px;
+    line-height:1.2rem;
+    text-align: justify;
+    flex:1
+
+}
+
+main hr {
+    width: 90%;
+    border: 1px solid #528750;
+    margin: 30px;
+}
+
+/* ---------------------------------------------------------------- */
+/* -------------------------- ABOUT ------------------------------- */
+/* ---------------------------------------------------------------- */
+
+.header {
+    background-image: url("../img/header.jpg"); /* The image used */
+    background-color: #cccccc; /* Used if the image is unavailable */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    flex-wrap: wrap;
+    min-height: 700px;
+    border-bottom: #528750 solid 1px;
+
+}
+
+.about {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center; 
+    width: 100%;
+    border-radius: 10px;
+    padding: 40px;
+}
+
+.about img {
+    width: 20%;
+    min-width: 400px;
+    margin: 20px;
+    border-radius: 20px;
+}
+
+.about div {
+    width: 70%;
+    margin: 20px;
+    min-width: 400px;
+}
+
+.about div h2 {
+    font-size: 30px;
+    color: #70ae6d;
+    padding: 10px;
+    text-align: center;
+}
+
+.about div p {
+    text-align: justify;
+    line-height: 1.2rem;
+    color: white;
+    margin: 10px;
+}
+
+.bg-about{
+    background-color: transparent;
+}
+
+.bg-about:hover{
+    background-color: #528750;
+}
+/* ---------------------------------------------------------------- */
+/* -------------------------- STATISTIQUES ------------------------ */
+/* ---------------------------------------------------------------- */
+
+.stat {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center; 
+    padding: 40px;
+}
+
+.card {
+    height: 270px;
+    width: 270px;
+
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 20px;
+    border-top: #528750 solid 2px;
+    border-bottom: #528750 solid 2px;
+    margin: 10px;
+}
+
+.card:hover {
+    box-shadow: 0 12px 12px 0 rgba(0,0,0,0.5);
+    transition: 0.3s;
+}
+
+.card img {
+    width: 100%;
+    max-height: 130px;
+    min-height: 130px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.card div {
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+}
+
+/* ---------------------------------------------------------------- */
+/* -------------------------- FOOTER ------------------------------ */
+/* ---------------------------------------------------------------- */
+
+footer {
+    display: flex;
+    background-color: #528750;
+    border-top: #70ae6d solid 1px;
+    color:white;
+    font-size: 22px;
+    height: 150px;
+    justify-content: center;
+    align-items: center;
+}
