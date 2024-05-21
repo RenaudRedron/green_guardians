@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {# TITLE #}
+    <title>{% block title %}{% endblock %}Inscription - Green Guardians</title>
+    <link rel="shortcut icon" href={{ asset('img/arbre.png') }} type="image/x-icon">
+
+    {# SEO #}
+    <meta name="robots" content="index, allow">
+    <meta name="description" content="Page d'inscription sur Green Guardians">
+    <meta name="keywords" content="Inscription, Register, Compte, Membre">
+    <meta name="author" content="Reno">
+    <meta name="publisher" content="Reno"> 
+
+    {# Google Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    {# BOOTSTRAP CSS #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    {# CSS #}
+    <link rel="stylesheet" href={{ asset('css/style.css') }}>
+    
+</head>
+
+<body>
+
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+
+
+    <div class="container my-5 py-5">
+        <div class="row">
+            <div class="col-lg-6 text-center">
+                <img class="img-fluid p-3" src="img\ecology-98.png" alt="Inscrivez-vous-sur-Green-Guardians">
+            </div>
+            <div class="col-lg-6 d-flex justify-content-center align-items-center">
+                {{ form_start(registrationForm) }}
+                    <h2 class="h3 mb-3 font-weight-normal">Inscrivez-vous</h2>
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label for="registration_form_firstName">Prénom<strong class="text-danger">*</strong></label>
+                            <div class="text-danger">{{ form_errors(registrationForm.firstName) }}</div>
+                            {{ form_widget(registrationForm.firstName, {"attr": {"class":"form-control", "autofocus":"autofocus"}})}}
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label for="registration_form_lastName">Nom<strong class="text-danger">*</strong></label>
+                            <div class="text-danger">{{ form_errors(registrationForm.lastName) }}</div>
+                            {{ form_widget(registrationForm.lastName, {"attr": {"class":"form-control"}})}}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="registration_form_email">Email<strong class="text-danger">*</strong></label>
+                        <div class="text-danger">{{ form_errors(registrationForm.email) }}</div>
+                        {{ form_widget(registrationForm.email, {"attr": {"class":"form-control"}})}}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="registration_form_password_first">Mot de passe<strong class="text-danger">*</strong></label>
+                        <div class="text-danger">{{ form_errors(registrationForm.password.first) }}</div>
+                        {{ form_widget(registrationForm.password.first, {"attr": {"class":"form-control", "placeholder":"Au moins 12 caractères"}})}}
+                        <small class="fs-6 opacity-50"><em>Le mot de passe doit contenir au moins une lettre majuscules, une minuscule, un chiffre et un caractères spécial.</em></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="registration_form_password_second">Confirmation du mot de passe<strong class="text-danger">*</strong></label>
+                        <div class="text-danger">{{ form_errors(registrationForm.password.second) }}</div>
+                        {{ form_widget(registrationForm.password.second, {"attr": {"class":"form-control", "placeholder":"Au moins 12 caractères"}})}}
+                    </div>
+
+                    <div class="mb-3">
+                        <input formnovalidate type="submit" class="btn btn-success shadow w-100" value="S'inscrire">
+                    </div>                           
+                    
+                    <div class="my-3 text-center">
+                        <p>Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Connectez-vous</a></p>
+                        <p class="m-1">
+                            <a href="{{path('app_home')}}">Retour à l'accueil</a>
+                        </p>
+                    </div>                
+                {{ form_end(registrationForm) }}
+            </div>
+        </div>
+    </div>
+
+    {# BOOTSTRAP JS #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>

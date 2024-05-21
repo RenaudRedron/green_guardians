@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {# TITLE #}
+    <title>{% block title %}{% endblock %} - Green Guardians</title>
+    <link rel="shortcut icon" href={{ asset('img/arbre.png') }} type="image/x-icon">
+
+    {# SEO #}
+    <meta name="robots" content="index, allow">
+    <meta name="description" content="{% block description %}{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}{% endblock %}">
+    <meta name="author" content="Reno">
+    <meta name="publisher" content="Reno"> 
+
+    {# Google Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    {# BOOTSTRAP CSS #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    {# CSS #}
+    <link rel="stylesheet" href={{ asset('css/style.css') }}>
+    
+    {# GOOGLE MAPS #}
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script type="module" src={{ asset('js/map.js') }}></script>
+
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg nav_bg_green w-100 position-absolute top-0 z-3">
+            <div class="container-fluid">
+                <a class="nav_text_logo" href="{{ path('app_home') }}"><img class="nav_img_logo position-absolute top-2" src="{{ asset('img/logo.png') }}" alt="Icon tree"> Green Guardians</a>
+                <button class="navbar-toggler " type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav ms-auto">
+                        <a class="nav-link mx-1 nav_a" href="{{ path('app_map') }}">Carte</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a class="nav-link mx-1 nav_a" href="{{ path('app_projet') }}">Projets</a>
+                            <a class="nav-link mx-1 nav_a" href="{{ path('app_profile') }}">Profil</a>
+                            <a class="nav-link mx-1 nav_a" href={{ path('admin_home') }}>Administration</a>
+                            <a class="nav-link mx-3 nav_link_connexion" href="{{ path('app_logout') }}">Déconnexion</a>
+                        {% elseif is_granted('ROLE_USER') %}
+                            <a class="nav-link mx-1 nav_a" href="#">Profil</a>
+                            <a class="nav-link mx-3 nav_link_connexion" href="{{ path('app_logout') }}">Déconnexion</a>
+                        {% else %}
+                        <a class="nav-link mx-1 nav_a" href="{{ path('app_register') }}">Inscription</a>
+                        <a class="nav-link mx-3 nav_link_connexion" href="{{ path('app_login') }}">Se connecter</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        
+        {% block main %}{% endblock %}
+
+    </main>
+
+    <footer>
+        <p>
+            Copyright 2024 GreenGardians
+        </p>
+    </footer>
+    
+    {# BOOTSTRAP JS #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+    {# GOOGLE MAPS JS #}
+    <script>(g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
+            ({ key: "AIzaSyBJDfXTzLLSaY29DCOm88U9geoDFCqAUcw", v: "beta" });</script>
+</body>
+
+</html>

@@ -1,0 +1,76 @@
+{% set themes = 'themes/base_visitor.html.twig' %}
+
+{% extends themes %}
+
+{% block title %}Carte des projects{% endblock %}
+
+{% block description %}Carte interactif des projets de Green Gardians{% endblock %}
+
+{% block keywords %}Map, Carte, Carte interactif, Projet{% endblock %}
+
+{% block main %}
+    <!-- Div d'affichage de la carte google -->
+    <div id="map"></div>
+
+    <section class="main_article">
+
+        <article class="main_article_container">
+            <div class="main_article_flex_item_left">
+                <img src={{ asset('img/akil-mazumder.jpg') }} alt="">
+            </div>
+            <div class="main_article_item_right_flex_container">
+                <div class="main_article_flex_container">
+                    <h2 class='main_article_flex_content_h2'>Plantation d'arbres en ville</h2>
+                    <img src={{ asset('img/icon_nofavori.png') }} alt="">
+                </div>
+                <div class='main_article_item_right_flex_content_div'>
+                    <p>Bonneuil sur marne, Val de marne (94)</p>
+                    <p>Projet à venir (10 juin 2024)</p>
+                </div>
+                <p class='main_article_item_right_flex_content_p'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dignissimos alias voluptas quibusdam! Saepe quibusdam, quisquam maxime, corporis beatae deleniti explicabo incidunt quos sapiente officia illo voluptas mollitia? Quas aliquid eum necessitatibus iste ab impedit tempore, voluptate fuga laudantium, placeat suscipit quibusdam inventore, error iure. Incidunt odit expedita porro sit! Quis delectus porro voluptate repellat tenetur quidem maiores eum quasi at.
+                </p>
+            </div>
+        </article>
+
+        <hr>
+
+        <article class="main_article_container">
+            <div class="main_article_flex_item_left">
+                <img src={{ asset('img/akil-mazumder.jpg') }} alt="">
+            </div>
+            <div class="main_article_item_right_flex_container">
+                <div class="main_article_flex_container">
+                    <h2 class='main_article_flex_content_h2'>Plantation d'arbres en ville</h2>
+                    <img src={{ asset('img/icon_nofavori.png') }} alt="">
+                </div>
+                <div class='main_article_item_right_flex_content_div'>
+                    <p>Bonneuil sur marne, Val de marne (94)</p>
+                    <p>Projet à venir (10 juin 2024)</p>
+                </div>
+                <p class='main_article_item_right_flex_content_p'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dignissimos alias voluptas quibusdam! Saepe quibusdam, quisquam maxime, corporis beatae deleniti explicabo incidunt quos sapiente officia illo voluptas mollitia? Quas aliquid eum necessitatibus iste ab impedit tempore, voluptate fuga laudantium, placeat suscipit quibusdam inventore, error iure. Incidunt odit expedita porro sit! Quis delectus porro voluptate repellat tenetur quidem maiores eum quasi at.
+                </p>
+            </div>
+        </article>
+
+        <hr>
+
+        <article class="main_article_container">
+            <div class="main_article_flex_item_left">
+                <img src={{ asset('img/akil-mazumder.jpg') }} alt="">
+            </div>
+            <div class="main_article_item_right_flex_container">
+                <div class="main_article_flex_container">
+                    <h2 class='main_article_flex_content_h2'>Plantation d'arbres en ville</h2>
+                    <img src={{ asset('img/icon_nofavori.png') }} alt="">
+                </div>
+                <div class='main_article_item_right_flex_content_div'>
+                    <p>Bonneuil sur marne, Val de marne (94)</p>
+                    <p>Projet à venir (10 juin 2024)</p>
+                </div>
+                <p class='main_article_item_right_flex_content_p'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dignissimos alias voluptas quibusdam! Saepe quibusdam, quisquam maxime, corporis beatae deleniti explicabo incidunt quos sapiente officia illo voluptas mollitia? Quas aliquid eum necessitatibus iste ab impedit tempore, voluptate fuga laudantium, placeat suscipit quibusdam inventore, error iure. Incidunt odit expedita porro sit! Quis delectus porro voluptate repellat tenetur quidem maiores eum quasi at.
+                </p>
+            </div>
+        </article>
+    </section>
+    
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'themes/base_visitor.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block description %}Page profil {{app.user.email}} de Green Gardians{% endblock %}
+
+{% block keywords %}Acceuil, Home, Welcome{% endblock %}
+
+{% block main %}
+    <div class="h-100 d-flex flex-column justify-content-center d">
+
+        <h2 class="text-center m-5">Profil de {{ app.user.lastName }} {{ app.user.firstName }}</h2>
+
+        <div class="text-center m-3">
+            <p>
+                Nom : {{ app.user.lastName }}
+            </p>
+            <p>
+                Prénom : {{ app.user.firstName }}
+            </p>
+            <p>
+                Adresse email : {{app.user.email}}
+            </p>
+        </div>
+
+    </div>
+{% endblock %}
