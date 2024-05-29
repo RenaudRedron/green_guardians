@@ -10,7 +10,7 @@
 
     {# SEO #}
     <meta name="robots" content="index, allow">
-    <meta name="description" content="GreenGuardians est un site qui vise à encourager et à faciliter les efforts de préservation de l'environnement en permettant aux utilisateurs de contribuer à des projets de reforestation, de protection de la faune, et de nettoyage des déchets. L'application offre un moyen interactif et ludique pour les utilisateurs de s'impliquer dans la conservation de la nature et de suivre l'impact de leurs actions.">
+    <meta name="description" content="Green Guardians est un site qui vise à encourager et à faciliter les efforts de préservation de l'environnement en permettant aux utilisateurs de contribuer à des projets de reforestation, de protection de la faune, et de nettoyage des déchets. L'application offre un moyen interactif et ludique pour les utilisateurs de s'impliquer dans la conservation de la nature et de suivre l'impact de leurs actions.">
     <meta name="keywords" content="Green, Nature, Project, Carte, Ecologie">
     <meta name="author" content="Reno">
     <meta name="publisher" content="Reno"> 
@@ -46,17 +46,19 @@
                 <div class="collapse navbar-collapse navbar-collapse-home" id="navbarNavAltMarkup">
                     <div class="navbar-nav ms-auto">
                         <a class="nav-link mx-1 nav_a" href="{{ path('app_map') }}">Carte</a>
+                        <a class="nav-link mx-1 nav_a" href="#">Contact</a>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <a class="nav-link mx-1 nav_a" href="{{ path('app_projet') }}">Projets</a>
-                            <a class="nav-link mx-1 nav_a" href="{{ path('app_profile') }}">Profil</a>
+                            <a class="nav-link mx-1 nav_a" href="{{ path('user_project_list') }}">Projets</a>
+                            <a class="nav-link mx-1 nav_a" href="{{ path('user_profile') }}">Profil</a>
                             <a class="nav-link mx-1 nav_a" href={{ path('admin_home') }}>Administration</a>
                             <a class="nav-link mx-3 nav_link_connexion" href="{{ path('app_logout') }}">Déconnexion</a>
                         {% elseif is_granted('ROLE_USER') %}
-                            <a class="nav-link mx-1 nav_a" href="#">Profil</a>
+                            <a class="nav-link mx-1 nav_a" href="{{ path('user_project_list') }}">Projets</a>
+                            <a class="nav-link mx-1 nav_a" href="{{ path('user_profile') }}">Profil</a>                          
                             <a class="nav-link mx-3 nav_link_connexion" href="{{ path('app_logout') }}">Déconnexion</a>
                         {% else %}
-                        <a class="nav-link mx-1 nav_a" href="{{ path('app_register') }}">Inscription</a>
-                        <a class="nav-link mx-3 nav_link_connexion" href="{{ path('app_login') }}">Se connecter</a>
+                            <a class="nav-link mx-1 nav_a" href="{{ path('app_register') }}">Inscription</a>
+                            <a class="nav-link mx-3 nav_link_connexion" href="{{ path('app_login') }}">Se connecter</a>
                         {% endif %}
                     </div>
                 </div>

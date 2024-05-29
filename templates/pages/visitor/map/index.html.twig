@@ -4,73 +4,58 @@
 
 {% block title %}Carte des projects{% endblock %}
 
-{% block description %}Carte interactif des projets de Green Gardians{% endblock %}
+{% block description %}Carte interactif des projets de Green Guardians{% endblock %}
 
 {% block keywords %}Map, Carte, Carte interactif, Projet{% endblock %}
 
+{# GOOGLE MAPS #}
+{% block googleMaps %}
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script type="module" src={{ asset('js/map.js') }}></script>
+    <script>(g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
+            ({ key: "AIzaSyBJDfXTzLLSaY29DCOm88U9geoDFCqAUcw", v: "beta" });</script>    
+{% endblock %}
+
 {% block main %}
     <!-- Div d'affichage de la carte google -->
-    <div id="map"></div>
+    <div id="map" data-projects="{{ projects|serialize(format = 'json') }}"></div>
 
     <section class="main_article">
+    
+        {% if projects|length == 0 %}
+            <div class="text-center">
+                <p>Aucun projet pour le moment.</p>
+            </div>
+        {% endif %}
 
-        <article class="main_article_container">
-            <div class="main_article_flex_item_left">
-                <img src={{ asset('img/akil-mazumder.jpg') }} alt="">
-            </div>
-            <div class="main_article_item_right_flex_container">
-                <div class="main_article_flex_container">
-                    <h2 class='main_article_flex_content_h2'>Plantation d'arbres en ville</h2>
-                    <img src={{ asset('img/icon_nofavori.png') }} alt="">
+        {% for project in projects %}
+            
+            <article class="main_article_container">
+                <div class="main_article_flex_item_left">
+                    {% if project.image %}
+                        <img src="{{ vich_uploader_asset(project, 'imageFile') }}" alt="{{ project.title }}">
+                    {% else %}
+                        <img src="{{ asset('img/no-image.png') }}" alt="{{ project.title }}">
+                    {% endif %}
                 </div>
-                <div class='main_article_item_right_flex_content_div'>
-                    <p>Bonneuil sur marne, Val de marne (94)</p>
-                    <p>Projet à venir (10 juin 2024)</p>
+                <div class="main_article_item_right_flex_container">
+                    <div class="main_article_flex_container">
+                        <h2 class='main_article_flex_content_h2'>{{project.title}}</h2>
+                        <img src={{ asset('img/icon_nofavori.png') }} alt="">
+                    </div>
+                    <div class='main_article_item_right_flex_content_div'>
+                        <p>{{project.address}}</p>
+                        <p>Projet à venir (10 juin 2024)</p>
+                    </div>
+                    <p class='main_article_item_right_flex_content_p'>{{project.content}}
+                    </p>
                 </div>
-                <p class='main_article_item_right_flex_content_p'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dignissimos alias voluptas quibusdam! Saepe quibusdam, quisquam maxime, corporis beatae deleniti explicabo incidunt quos sapiente officia illo voluptas mollitia? Quas aliquid eum necessitatibus iste ab impedit tempore, voluptate fuga laudantium, placeat suscipit quibusdam inventore, error iure. Incidunt odit expedita porro sit! Quis delectus porro voluptate repellat tenetur quidem maiores eum quasi at.
-                </p>
-            </div>
-        </article>
+            </article>
 
-        <hr>
+            <hr>
 
-        <article class="main_article_container">
-            <div class="main_article_flex_item_left">
-                <img src={{ asset('img/akil-mazumder.jpg') }} alt="">
-            </div>
-            <div class="main_article_item_right_flex_container">
-                <div class="main_article_flex_container">
-                    <h2 class='main_article_flex_content_h2'>Plantation d'arbres en ville</h2>
-                    <img src={{ asset('img/icon_nofavori.png') }} alt="">
-                </div>
-                <div class='main_article_item_right_flex_content_div'>
-                    <p>Bonneuil sur marne, Val de marne (94)</p>
-                    <p>Projet à venir (10 juin 2024)</p>
-                </div>
-                <p class='main_article_item_right_flex_content_p'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dignissimos alias voluptas quibusdam! Saepe quibusdam, quisquam maxime, corporis beatae deleniti explicabo incidunt quos sapiente officia illo voluptas mollitia? Quas aliquid eum necessitatibus iste ab impedit tempore, voluptate fuga laudantium, placeat suscipit quibusdam inventore, error iure. Incidunt odit expedita porro sit! Quis delectus porro voluptate repellat tenetur quidem maiores eum quasi at.
-                </p>
-            </div>
-        </article>
+        {% endfor %}
 
-        <hr>
-
-        <article class="main_article_container">
-            <div class="main_article_flex_item_left">
-                <img src={{ asset('img/akil-mazumder.jpg') }} alt="">
-            </div>
-            <div class="main_article_item_right_flex_container">
-                <div class="main_article_flex_container">
-                    <h2 class='main_article_flex_content_h2'>Plantation d'arbres en ville</h2>
-                    <img src={{ asset('img/icon_nofavori.png') }} alt="">
-                </div>
-                <div class='main_article_item_right_flex_content_div'>
-                    <p>Bonneuil sur marne, Val de marne (94)</p>
-                    <p>Projet à venir (10 juin 2024)</p>
-                </div>
-                <p class='main_article_item_right_flex_content_p'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dignissimos alias voluptas quibusdam! Saepe quibusdam, quisquam maxime, corporis beatae deleniti explicabo incidunt quos sapiente officia illo voluptas mollitia? Quas aliquid eum necessitatibus iste ab impedit tempore, voluptate fuga laudantium, placeat suscipit quibusdam inventore, error iure. Incidunt odit expedita porro sit! Quis delectus porro voluptate repellat tenetur quidem maiores eum quasi at.
-                </p>
-            </div>
-        </article>
     </section>
     
 {% endblock %}

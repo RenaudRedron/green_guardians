@@ -23,7 +23,7 @@ class CategoryController extends AbstractController
     )
     {}
 
-    #[Route('/category', name: 'admin_category_index', methods:["GET"])]
+    #[Route('/category/list', name: 'admin_category_index', methods:["GET"])]
     public function index(): Response
     {
         return $this->render('pages/admin/category/index.html.twig', [
@@ -31,7 +31,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/create', name: 'admin_category_create', methods:["GET","POST"])]
+    #[Route('/category/create', name: 'admin_category_create', methods:["GET","POST"])]
     public function create(Request $request): Response
     {
 
@@ -59,7 +59,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/{id<\d+>}/edit', name: 'admin_category_edit', methods:["GET","POST"])]
+    #[Route('/category/{id<\d+>}/edit', name: 'admin_category_edit', methods:["GET","POST"])]
     public function edit(Category $category, Request $request): Response
     {
 
@@ -91,7 +91,7 @@ class CategoryController extends AbstractController
         {
             // Si le token est valide
 
-            $this->addFlash("danger", "La catégorie {$category->getName()} a été supprimée");
+            $this->addFlash("danger", "La catégorie {$category->getName()} a été supprimer");
 
             // On fait appel a entityManager pour préparer la requete
             $this->entityManager->remove($category);

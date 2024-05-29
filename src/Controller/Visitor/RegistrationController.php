@@ -50,7 +50,7 @@ class RegistrationController extends AbstractController
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
-                    ->from(new Address('green-guardians@gmail.com', 'Admin Green Guardians'))
+                    ->from(new Address('contact@green-guardians.fr', 'Contact - Green Guardians'))
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('pages/visitor/registration/confirmation_email.html.twig')
