@@ -15,6 +15,18 @@
     <meta name="author" content="Reno">
     <meta name="publisher" content="Reno"> 
 
+    {# jQuery #}
+    {% block jQuery %} {% endblock %}
+
+    {# DataTables -> Pour la pagination #}
+    {% block dataTables %}{% endblock %}
+
+    {# Wysiwyg editor #}
+    {% block ckEditor %}{% endblock %}
+
+    {# Select2 #}
+    {% block select2 %}{% endblock %}
+
     {# Google Font #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,8 +39,10 @@
     <link rel="stylesheet" href={{ asset('css/style.css') }}>
     
     {# GOOGLE MAPS #}
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script type="module" src={{ asset('js/map.js') }}></script>
+    {% block googleMaps %}{% endblock %}
+
+    {# Font awesome #}
+    {% block fontAwesome %}{% endblock %}
 
 </head>
 
@@ -45,17 +59,19 @@
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav ms-auto">
                         <a class="nav-link mx-1 nav_a" href="{{ path('app_map') }}">Carte</a>
+                        <a class="nav-link mx-1 nav_a" href="#">Contact</a>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <a class="nav-link mx-1 nav_a" href="{{ path('app_projet') }}">Projets</a>
-                            <a class="nav-link mx-1 nav_a" href="{{ path('app_profile') }}">Profil</a>
+                            <a class="nav-link mx-1 nav_a" href="{{ path('user_project_list') }}">Projets</a>
+                            <a class="nav-link mx-1 nav_a" href="{{ path('user_profile') }}">Profil</a>
                             <a class="nav-link mx-1 nav_a" href={{ path('admin_home') }}>Administration</a>
                             <a class="nav-link mx-3 nav_link_connexion" href="{{ path('app_logout') }}">Déconnexion</a>
                         {% elseif is_granted('ROLE_USER') %}
-                            <a class="nav-link mx-1 nav_a" href="#">Profil</a>
+                            <a class="nav-link mx-1 nav_a" href="{{ path('user_project_list') }}">Projets</a>
+                            <a class="nav-link mx-1 nav_a" href="{{ path('user_profile') }}">Profil</a>
                             <a class="nav-link mx-3 nav_link_connexion" href="{{ path('app_logout') }}">Déconnexion</a>
                         {% else %}
-                        <a class="nav-link mx-1 nav_a" href="{{ path('app_register') }}">Inscription</a>
-                        <a class="nav-link mx-3 nav_link_connexion" href="{{ path('app_login') }}">Se connecter</a>
+                            <a class="nav-link mx-1 nav_a" href="{{ path('app_register') }}">Inscription</a>
+                            <a class="nav-link mx-3 nav_link_connexion" href="{{ path('app_login') }}">Se connecter</a>
                         {% endif %}
                     </div>
                 </div>
@@ -79,10 +95,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-
-    {# GOOGLE MAPS JS #}
-    <script>(g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
-            ({ key: "AIzaSyBJDfXTzLLSaY29DCOm88U9geoDFCqAUcw", v: "beta" });</script>
 </body>
 
 </html>

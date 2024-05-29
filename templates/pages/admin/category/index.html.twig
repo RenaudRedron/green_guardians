@@ -2,7 +2,7 @@
 
 {% block title %}Liste des catégories{% endblock %}
 
-{% block description %}Liste des catégories de Green Gardians{% endblock %}
+{% block description %}Liste des catégories de Green Guardians{% endblock %}
 
 {% block keywords %}Admin, Administration, Catégories{% endblock %}
 
@@ -38,13 +38,15 @@
         <a class="btn btn-dark shadow" href="{{path('admin_category_create')}}"><i class="fa-solid fa-folder-plus"></i> Ajouter une catégorie</a>
     </div>  
 
+    {% include "components/_alert.html.twig" %}
+
     <div class="table-responsive">
 
         <table id="myTable" class="table table-hover table-bordered table-striped mx-auto text-center">
             <thead class="table-dark">
                 <tr>
-                        <th scope="col">#</th>
                         <th scope="col">Nom</th>
+                        <th scope="col">Description</th>
                         <th scope="col">Créé le</th>
                         <th scope="col">Modifier le</th>
                         <th scope="col">Options</th>
@@ -53,8 +55,14 @@
             <tbody>
                 {% for category in categories %}
                     <tr>
-                        <td scope="row">{{category.id}}</td>
                         <td>{{category.name}}</td>
+                        <td>
+                            {% if category.description %}
+                                <a class="btn btn-sm btn-dark" href="">Lire</a>
+                            {% else %}
+                                Aucune
+                            {% endif %}
+                        </td>
                         <td>{{category.createdAt|format_datetime()}}</td>
                         <td>{{category.updatedAt|format_datetime()}}</td>
                         <td>

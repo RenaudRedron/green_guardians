@@ -3,6 +3,11 @@ let map;
 
 async function initMap() {
 
+
+  var dataProjects = document.getElementById("map");
+  let p = dataProjects.dataset.projects
+
+
   // On importe l'objet Map de google.maps
   const { Map } = await google.maps.importLibrary("maps");
 
@@ -18,16 +23,15 @@ async function initMap() {
   });
 
   // Tableaux contenant toute les coordonnées des répères indique aussi le title et le type
-  const markers = [
-    [{ lat: 46.7667, lng: 2.20 }, "Boynton Pass",1],
-    [{ lat: 46.7667, lng: 2.45 }, "Airport Mesa",1],
-    [{ lat: 46.854, lng: 1.45 }, "Chapel of the Holy Cross",0],
-    [{ lat: 46.7667, lng: 2.35 }, "Red Rock Crossing",0],
-    [{ lat: 46.7667, lng: 2.01 }, "Bell Rock",1],
-  ];
+  let markers = [];
+
+  console.log(JSON.parse(p))
+  JSON.parse(p).forEach(element => {
+    markers.push([{ lat: element.latitude, lng: element.longitude }, element.title, element.content, 0]);
+  });
 
   // On boucle sur le tableaux markers pour placer nos repère sur la carte
-  markers.forEach(([position, title, type], i) => {
+  markers.forEach(([position, title, content, type], i) => {
     
     // On choisi l'image à afficher selon le type du repère
     let image = ''
@@ -50,18 +54,9 @@ async function initMap() {
       '<div id="content">' +
       '<div id="siteNotice">' +
       "</div>" +
-      '<h1 id="firstHeading" class="firstHeading">Uluru</h1>' +
+      '<h1 id="firstHeading" class="firstHeading">'+title+'</h1>' +
       '<div id="bodyContent">' +
-      "<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large " +
-      "sandstone rock formation in the southern part of the " +
-      "Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) " +
-      "south west of the nearest large town, Alice Springs; 450&#160;km " +
-      "(280&#160;mi) by road. Kata Tjuta and Uluru are the two major " +
-      "features of the Uluru - Kata Tjuta National Park. Uluru is " +
-      "sacred to the Pitjantjatjara and Yankunytjatjara, the " +
-      "Aboriginal people of the area. It has many springs, waterholes, " +
-      "rock caves and ancient paintings. Uluru is listed as a World " +
-      "Heritage Site.</p>" +
+      "<p>"+content+"</p>" +
       '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
       "https://en.wikipedia.org/w/index.php?title=Uluru</a> " +
       "(last visited June 22, 2009).</p>" +
