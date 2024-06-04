@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProjectRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -10,8 +12,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[UniqueEntity('address', message: 'Impossible de créer plusieurs projets avec la même adresse.')]
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[Vich\Uploadable]
 class Project
@@ -19,6 +21,7 @@ class Project
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['project_read'])]
     private ?int $id = null;
 
     #############################
@@ -31,6 +34,7 @@ class Project
         maxMessage: 'Le titre du projet ne peut pas contenir plus de {{ limit }} caractères',
     )]
     #[ORM\Column(length: 255)]
+    #[Groups(['project_read', 'project_write'])]
     private ?string $title = null;
 
     #############################
@@ -38,6 +42,7 @@ class Project
     #############################
     #[Gedmo\Slug(fields: ['title'])]
     #[ORM\Column(length: 255)]
+    #[Groups(['project_read', 'project_write'])]
     private ?string $slug = null;
 
     #############################
@@ -53,36 +58,51 @@ class Project
     private ?File $imageFile = null;
 
     #[ORM\Column(length: 255, unique: true, nullable: true)]
+    #[Groups(['project_read', 'project_write'])]
     private ?string $image = null;
 
     #############################
     ### content
     #############################
-    #[Assert\NotBlank(message: "Le contenu est obligatoire.")]
+
+    #[Assert\NotBlank(message: "La description est obligatoire.")]
     #[Assert\Length(
-        max: 10000,
-        maxMessage: 'Le contenu du projet ne peut pas contenir plus de {{ limit }} caractères',
+        min: 50,
+        max: 500,
+        minMessage: 'La description du projet doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'La description du projet ne peut pas contenir plus de {{ limit }} caractères',
     )]
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['project_read', 'project_write'])]
+    private ?string $description = null;
+
+    #############################
+    ### content
+    #############################
+
+    #[Assert\NotBlank(message: "Le contenu est obligatoire.")]
+    #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['project_read', 'project_write'])]
     private ?string $content = null;
 
     #############################
     ### address
     #############################
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255)]
+    #[Groups(['project_read', 'project_write'])]
     private ?string $address = null;
 
     #############################
     ### street
     #############################
 
-    #[Assert\NotBlank(message: "La rue est obligatoire.")]
     #[Assert\Length(
         max: 255,
         maxMessage: 'La rue ne doit pas dépasser {{ limit }} caractères.',
     )]
     #[ORM\Column(length: 255)]
+    #[Groups(['project_read', 'project_write'])]
     private ?string $street = null;
 
     #############################
@@ -92,6 +112,7 @@ class Project
     #[Assert\NotBlank(message: "Le code postale est obligatoire.")]
     #[Assert\PositiveOrZero(message: "Le code postale ne peu pas être inférieur a zéro.")]
     #[ORM\Column]
+    #[Groups(['project_read', 'project_write'])]
     private ?int $code = null;
 
     #############################
@@ -104,6 +125,7 @@ class Project
         maxMessage: 'La ville ne doit pas dépasser {{ limit }} caractères.',
     )]
     #[ORM\Column(length: 255)]
+    #[Groups(['project_read', 'project_write'])]
     private ?string $city = null;
 
     #############################
@@ -111,6 +133,7 @@ class Project
     #############################
 
     #[ORM\Column]
+    #[Groups(['project_read', 'project_write'])]
     private ?float $longitude = null;
 
     #############################
@@ -118,6 +141,7 @@ class Project
     #############################
 
     #[ORM\Column]
+    #[Groups(['project_read', 'project_write'])]
     private ?float $latitude = null;
 
     #############################
@@ -133,6 +157,7 @@ class Project
         message: 'Le numéro de téléphone est incorrect.',
     )]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['project_read', 'project_write'])]
     private ?string $phone = null;
 
     #############################
@@ -148,22 +173,25 @@ class Project
         message: 'Le format de l\'adresse email {{ value }} ne correspond pas au bon format.',
     )]
     #[ORM\Column(length: 255)]
+    #[Groups(['project_read', 'project_write'])]
     private ?string $email = null;
 
     #############################
-    ### budget
+    ### availableSpace
     #############################
 
-    #[Assert\PositiveOrZero(message: "Le budget ne peu pas être inférieur a zéro.")]
+    #[Assert\PositiveOrZero(message: "Le nombre de participants maximum ne peu pas être inférieur a zéro.")]
     #[ORM\Column(nullable: true)]
-    private ?float $budget = null;
-    
+    #[Groups(['project_read', 'project_write'])]
+    private ?int $availableSpace = null;
+
     #############################
     ### start date
     #############################
 
     #[Assert\NotBlank(message: "La date de début est obligatoire.")]
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[Groups(['project_read', 'project_write'])]
     private ?\DateTimeImmutable $startDate = null;
 
     #############################
@@ -171,6 +199,7 @@ class Project
     #############################
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    #[Groups(['project_read', 'project_write'])]
     private ?\DateTimeImmutable $endDate = null;
 
     #############################
@@ -178,6 +207,7 @@ class Project
     #############################
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['project_read', 'project_write'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #############################
@@ -185,7 +215,36 @@ class Project
     #############################
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['project_read', 'project_write'])]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'projects')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['project_read', 'project_write'])]
+    private ?User $user = null;
+
+    #[Assert\NotBlank(
+        message: "Le choix d'une catégorie est obligatoire."
+    )]
+    #[Assert\Type(
+        type: Category::class,
+        message: 'Cette catégorie est invalide.',
+    )]
+    #[Groups(['project_read', 'project_write'])]
+    #[ORM\ManyToOne(inversedBy: 'projects')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
+
+    /**
+     * @var Collection<int, Tag>
+     */
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'projects')]
+    private Collection $tags;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -197,7 +256,7 @@ class Project
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+    public function setTitle(?string $title): static
     {
         $this->title = $title;
 
@@ -209,7 +268,7 @@ class Project
         return $this->content;
     }
 
-    public function setContent(string $content): static
+    public function setContent(?string $content): static
     {
         $this->content = $content;
 
@@ -233,21 +292,9 @@ class Project
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(?string $email): static
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    public function getBudget(): ?float
-    {
-        return $this->budget;
-    }
-
-    public function setBudget(?float $budget): static
-    {
-        $this->budget = $budget;
 
         return $this;
     }
@@ -336,7 +383,7 @@ class Project
         return $this;
     }
 
-/**
+    /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
      * of 'UploadedFile' is injected into this setter to trigger the update. If this
      * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
@@ -378,7 +425,7 @@ class Project
         return $this->street;
     }
 
-    public function setStreet(string $street): static
+    public function setStreet(?string $street): static
     {
         $this->street = $street;
 
@@ -390,7 +437,7 @@ class Project
         return $this->code;
     }
 
-    public function setCode(int $code): static
+    public function setCode(?int $code): static
     {
         $this->code = $code;
 
@@ -402,7 +449,7 @@ class Project
         return $this->city;
     }
 
-    public function setCity(string $city): static
+    public function setCity(?string $city): static
     {
         $this->city = $city;
 
@@ -414,10 +461,83 @@ class Project
         return $this->address;
     }
 
-    public function setAddress(string $address): static
+    public function setAddress(?string $address): static
     {
         $this->address = $address;
 
         return $this;
     }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): static
+    {
+        $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    public function getAvailableSpace(): ?int
+    {
+        return $this->availableSpace;
+    }
+
+    public function setAvailableSpace(?int $availableSpace): static
+    {
+        $this->availableSpace = $availableSpace;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
 }

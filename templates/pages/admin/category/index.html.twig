@@ -46,6 +46,7 @@
             <thead class="table-dark">
                 <tr>
                         <th scope="col">Nom</th>
+                        <th scope="col">Marqueur</th>
                         <th scope="col">Description</th>
                         <th scope="col">Créé le</th>
                         <th scope="col">Modifier le</th>
@@ -56,6 +57,11 @@
                 {% for category in categories %}
                     <tr>
                         <td>{{category.name}}</td>
+                        <td>
+                            <div class="d-flex flex-column justify-content-center align-items-center">
+                                <img width="30" height="40" src="{{ vich_uploader_asset(category, 'imageFile') }}" alt="{{ category.name }}">
+                            </div>
+                        </td>
                         <td>
                             {% if category.description %}
                                 <a class="btn btn-sm btn-dark" href="">Lire</a>

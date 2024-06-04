@@ -11,23 +11,70 @@
 {% endblock %}
 
 {% block select2 %}
-    {# <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
         // In your Javascript (external .js resource or <script> tag)
         $(document).ready(function() {
-            $('#admin_post_form_tags').select2();
+            $('#user_project_form_tags').select2();
         });
     </script>
-    #}
 {% endblock %}
 
+{% block quill %}
+    <!-- Include the Quill library -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+
+    <!-- Initialize Quill editor -->
+    <!-- Initialize Quill editor -->
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+                
+            const toolbarOptions = [
+            ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+            ['link'],
+
+            [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
+
+            [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+            [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+            [{ 'align': [] }],
+
+            ['clean']                                         // remove formatting button
+            ];
+
+            const quill = new Quill('#editor', {
+            modules: {
+                toolbar: toolbarOptions
+            },
+            theme: 'snow'
+            });
+
+            // Synchroniser le contenu de Quill avec le champ de formulaire caché
+            const hiddenInput = document.querySelector('#content');
+            quill.on('text-change', function() {
+                hiddenInput.value = quill.root.innerHTML;
+            });
+
+            // Initialiser le contenu de Quill avec la valeur existante du formulaire
+            hiddenInput.value = hiddenInput.value.trim() !== '' ? hiddenInput.value : null;
+            quill.root.innerHTML = hiddenInput.value;
+
+        });
+
+    </script>
+{% endblock %}
 
 {% block main %}
     <div class="p-5">
 
-        <h2 class="text-center mt-5 py-5">Modification d'un projet</h2>
+        <h2 class="text-center mb-5">Modification d'un projet</h2>
 
         {% include "components/_alert.html.twig" %}
 
@@ -40,6 +87,18 @@
                         <label for="user_project_form_title">Titre<strong class="text-danger">*</strong></label>
                         <div class="text-danger">{{ form_errors(form.title) }}</div>
                         {{ form_widget(form.title, {"attr": {"class":"form-control", "autofocus":"autofocus"}}) }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="user_project_form_category">Catégorie<strong class="text-danger">*</strong></label>
+                        <div class="text-danger">{{ form_errors(form.category) }}</div>
+                        {{ form_widget(form.category, {"attr": {"class":"form-control"}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="user_project_form_tags">Tags</label>
+                        <div class="text-danger">{{ form_errors(form.tags) }}</div>
+                        {{ form_widget(form.tags, {"attr": {"class":"form-control"}}) }}
                     </div>
 
                     <div class="mb-4 row">
@@ -72,21 +131,27 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="user_project_form_budget">Budget</label>
-                        <div class="text-danger">{{ form_errors(form.budget) }}</div>
-                        {{ form_widget(form.budget, {"attr": {"class":"form-control"}}) }}
+                        <label for="user_project_form_available_space">Nombre de participants maximum</label>
+                        <div class="text-danger">{{ form_errors(form.availableSpace) }}</div>
+                        {{ form_widget(form.availableSpace, {"attr": {"class":"form-control"}}) }}
                     </div>
 
-                    <div class="mb-5">
-                        <label for="user_project_form_content">Description du projet<strong class="text-danger">*</strong></label>
-                        <div class="text-danger">{{ form_errors(form.content) }}</div>
-                        {{ form_widget(form.content, {"id":"editor", "attr": {"class":"form-control"}}) }}
+                    <div class="mb-3">
+                        <label for="user_project_form_description">Courte description<strong class="text-danger">*</strong></label>
+                        <div class="text-danger">{{ form_errors(form.description) }}</div>
+                        {{ form_widget(form.description, {"attr": {"class":"form-control"}}) }}
+                    </div>                    
+
+                    <div class="text-danger">{{ form_errors(form.content) }}</div>
+                    <div id="editor" class="form-control" style="height: 300px;">
                     </div>
+                    
+                    {{ form_widget(form.content, {"id":"content", "attr": {"class": "d-none"}}) }}
 
                     <hr class="mb-5">
 
                     <div class="mb-3">
-                        <label for="user_project_form_street">Rue<strong class="text-danger">*</strong></label>
+                        <label for="user_project_form_street">Rue</label>
                         <div class="text-danger">{{ form_errors(form.street) }}</div>
                         {{ form_widget(form.street, {"attr": {"class":"form-control"}}) }}
                     </div>

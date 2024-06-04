@@ -55,13 +55,24 @@ body {
 .nav_text_logo {
     display: flex;
     color: white;
-    height: 50px;
+    height: 70px;
     align-items: center;
     margin-left: 45px;
     padding-left: 50px;
-    padding-right: 25px;
     font-size: 25px;
-    min-width: 250px;
+
+}
+
+@media only screen and (max-width: 360px) {
+    .nav_text_logo {
+        font-size: 20px;
+        padding-left: 30px;
+    }
+
+    .nav_img_logo {
+        height: 57px;
+        left: 15px;
+    }
 }
 
 .nav_a {
@@ -81,7 +92,7 @@ body {
     color: white;
 }
 
-@media only screen and (max-width: 991px) {
+@media only screen and (max-width: 700px) {
     .nav_a:hover {
         background-color: transparent;
     }
@@ -325,4 +336,42 @@ footer {
     height: 150px;
     justify-content: center;
     align-items: center;
+}
+
+#text-header {
+    font-size: 20px;
+}
+
+@media screen and (max-width: 700px){
+    #text-header {
+        font-size: 16px;
+    }
+}
+
+
+.accordion-button:active {
+    background-color: #528750e7;
+    color: white;
+}
+
+.accordion-button {
+    background-color: #528750e7;
+    color: white;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(0,0,0,.125);
+    background-color: #528750e7;
+
+}
+
+.accordion-button-active, .collapsed {
+    background-color: #528750e7;
+    color: white;
+}
+
+.accordion-button:not(.collapsed){
+    background-color: #528750e7;
+    color: white;
 }
