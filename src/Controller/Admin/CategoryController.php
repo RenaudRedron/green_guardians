@@ -4,8 +4,7 @@ namespace App\Controller\Admin;
 
 use DateTimeImmutable;
 use App\Entity\Category;
-use App\Form\CategoryFromType;
-use Doctrine\ORM\EntityManager;
+use App\Form\CategoryFormType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,13 +16,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CategoryController extends AbstractController
 {
 
-    public function __construct( 
+    public function __construct(
         private EntityManagerInterface $entityManager,
         private CategoryRepository $categoryRepository
-    )
-    {}
+    ) {
+    }
 
-    #[Route('/category/list', name: 'admin_category_index', methods:["GET"])]
+    #[Route('/category/list', name: 'admin_category_index', methods: ["GET"])]
     public function index(): Response
     {
         return $this->render('pages/admin/category/index.html.twig', [
@@ -31,13 +30,13 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/category/create', name: 'admin_category_create', methods:["GET","POST"])]
+    #[Route('/category/create', name: 'admin_category_create', methods: ["GET", "POST"])]
     public function create(Request $request): Response
     {
 
         $category = new Category();
 
-        $form = $this->createForm(CategoryFromType::class, $category);
+        $form = $this->createForm(CategoryFormType::class, $category);
 
         $form->handleRequest($request);
 
@@ -49,7 +48,7 @@ class CategoryController extends AbstractController
             $this->entityManager->persist($category);
             $this->entityManager->flush();
 
-            $this->addFlash("success", "La catégorie a été ajoutée avec succès");
+            $this->addFlash("success", "La catégorie a été ajouter avec succès");
 
             return $this->redirectToRoute('admin_category_index');
         }
@@ -59,11 +58,11 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/category/{id<\d+>}/edit', name: 'admin_category_edit', methods:["GET","POST"])]
+    #[Route('/category/{id<\d+>}/edit', name: 'admin_category_edit', methods: ["GET", "POST"])]
     public function edit(Category $category, Request $request): Response
     {
 
-        $form = $this->createForm(CategoryFromType::class, $category);
+        $form = $this->createForm(CategoryFormType::class, $category);
 
         $form->handleRequest($request);
 
@@ -74,21 +73,21 @@ class CategoryController extends AbstractController
             $this->entityManager->persist($category);
             $this->entityManager->flush();
 
-            $this->addFlash("success", "La catégorie a été modifiée avec succès");
+            $this->addFlash("success", "La catégorie a été modifier avec succès");
 
             return $this->redirectToRoute('admin_category_index');
         }
 
         return $this->render('pages/admin/category/edit.html.twig', [
-            "formCategory" => $form->createView()
+            "formCategory" => $form->createView(),
+            "category" => $category
         ]);
     }
 
     #[Route('/category/{id<\d+>}/delete', name: 'admin_category_delete', methods: ["POST"])]
     public function delete(Category $category, Request $request): Response
-    {  
-        if ( $this->isCsrfTokenValid('delete_category_'.$category->getId(), $request->request->get('_csrf_token') ) )
-        {
+    {
+        if ($this->isCsrfTokenValid('delete_category_' . $category->getId(), $request->request->get('_csrf_token'))) {
             // Si le token est valide
 
             $this->addFlash("danger", "La catégorie {$category->getName()} a été supprimer");
@@ -98,7 +97,6 @@ class CategoryController extends AbstractController
 
             // On fait appel a entityManager pour exécuter la requete
             $this->entityManager->flush();
-
         }
 
         return $this->redirectToRoute("admin_category_index");

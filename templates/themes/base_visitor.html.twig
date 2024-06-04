@@ -21,9 +21,6 @@
     {# DataTables -> Pour la pagination #}
     {% block dataTables %}{% endblock %}
 
-    {# Wysiwyg editor #}
-    {% block ckEditor %}{% endblock %}
-
     {# Select2 #}
     {% block select2 %}{% endblock %}
 
@@ -38,6 +35,9 @@
     {# CSS #}
     <link rel="stylesheet" href={{ asset('css/style.css') }}>
     
+    {# quill #}
+    {% block quill %}{% endblock %}
+
     {# GOOGLE MAPS #}
     {% block googleMaps %}{% endblock %}
 
@@ -48,7 +48,7 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg nav_bg_green w-100 position-absolute top-0 z-3">
+        <nav class="navbar navbar-expand-lg nav_bg_green w-100">
             <div class="container-fluid">
                 <a class="nav_text_logo" href="{{ path('app_home') }}"><img class="nav_img_logo position-absolute top-2" src="{{ asset('img/logo.png') }}" alt="Icon tree"> Green Guardians</a>
                 <button class="navbar-toggler " type="button" data-bs-toggle="collapse"
@@ -91,6 +91,8 @@
         </p>
     </footer>
     
+
+
     {# BOOTSTRAP JS #}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

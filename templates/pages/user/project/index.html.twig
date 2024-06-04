@@ -6,68 +6,138 @@
 
 {% block keywords %}Projets, Joindre, Rejoindren, Liste{% endblock %}
 
+{% block quill %}
+
+<style>
+
+.modal-dialog  {
+    max-width: 80%;
+}
+
+.ql-align-center {
+    text-align:center
+}
+
+.ql-align-right {
+    text-align:right
+}
+
+.ql-align-left {
+    text-align:left
+}
+
+.ql-align-justify {
+    text-align:justify
+}
+
+</style>
+
+<!-- Include the Quill library -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
+<script>
+    const quill = new Quill('#editor');
+</script>
+{% endblock %}
+
 {# Font awesome #}
 {% block fontAwesome %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 {% endblock %}
 
 {% block main %}
-    <div class="p-5">
+    
+    <h2 class="text-center mt-5">Mes projets</h2>
 
-        <h2 class="text-center m-5 pt-5">Mes projets</h2>
+    {% include "components/_alert.html.twig" %}
 
-        {% include "components/_alert.html.twig" %}
+    {% if projects|length > 0 %}
 
-        {% if projects|length > 0 %}
-
-        <div class="d-flex justify-content-end align-items-center my-3">
+    <div class="d-flex justify-content-end align-items-center mx-5">
+        <a class="btn btn-primary shadow" href="{{path('user_project_create')}}"><i class="fa-solid fa-folder-plus"></i> Nouveau projet</a>
+    </div>
+    {% elseif projects|length == 0 %}
+        <div class="text-center">
+            <p>Vous n'avez pas de projet pour le moment.</p>
             <a class="btn btn-primary shadow" href="{{path('user_project_create')}}"><i class="fa-solid fa-folder-plus"></i> Nouveau projet</a>
         </div>
-        {% elseif projects|length == 0 %}
-            <div class="text-center">
-                <p>Vous n'avez pas de projet pour le moment.</p>
-                <a class="btn btn-primary shadow" href="{{path('user_project_create')}}"><i class="fa-solid fa-folder-plus"></i> Nouveau projet</a>
-            </div>
-        {% endif %}
+    {% endif %}
+        
+    <div class="container-fluid mb-5">
+        <div class="row justify-content-center">
+            {% for project in projects %}
+                    
+                <div class="position-relative col-sm-11 col-md-5 col-xl-3 shadow text-center d-flex flex-column justify-content-center p-3 m-3 rounded border border-success border-opacity-25">
 
-        <div class="container-fluid">
-            <div class="row justify-content-center">
-                {% for project in projects %}
-            
-                    <div class="col-sm-11 col-md-5 col-xl-3 shadow text-center d-flex flex-column justify-content-center p-3 m-3 rounded border border-success border-opacity-25">
-                        <div class="p-3">
-                            {% if project.image %}
-                                <img width="150" height="150" src="{{ vich_uploader_asset(project, 'imageFile') }}" alt="{{ project.title }}">
-                            {% else %}
-                                <img width="150" height="150" src="{{ asset('img/no-image.png') }}" alt="{{ project.title }}">
-                            {% endif %}
-                            <h5 class="card-title m-3">{{project.title}}</h5>
-                            <h6 class="card-subtitle mb-2 text-body-secondary">Début : {{project.startDate|format_date()}} {{ project.endDate ? " | Fin : " ~ project.endDate|format_date() : ""}}</h6>
-                            <p class="ard-subtitle mb-2 text-body-secondary"><strong>Adresse : </strong>{{project.address}}</p>
-                            {% if project.phone %}
-                                <p class="ard-subtitle mb-2 text-body-secondary"><strong>Téléphone : </strong>{{project.phone}}</p>
-                            {% endif %}
-                            {% if project.budget %}
-                                <p class="ard-subtitle mb-2 text-body-secondary"><strong>Budget : </strong>{{project.budget}}€</p>
-                            {% endif %}
-                        </div>
-                        <div>
-                            <a class="btn btn-success" href="">Voir le projet</a>
-                            <div class="m-3">
-                                <a href="{{path('user_project_edit', {'id':project.id} )}}"><i class="fa-solid fa-pen-to-square fa-lg m-1" ></i></a>
-                                <form class="d-inline" action="{{path('user_project_delete', {id:project.id})}}" method="post">
-                                    <input type="hidden" name="_csrf_token" value="{{csrf_token('delete_project_'~project.id)}}">
-                                    <button class="border-0 bg-transparent" onclick="return confirm('Voulez-vous vraiment supprimer cet article ?')" type="submit"><i class="color-danger fa-solid fa-trash fa-lg m-1" style="color: #df0707;"></i></button>
-                                </form>
-                            </div>
-                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ project.createdAt >= project.updatedAt ? "Créé le "~project.createdAt|format_date() : "Modifié le "~project.updatedAt|format_date()}}</h6>
-                        </div>
+                    <div class="position-absolute top-0 end-0 m-1">
+                        <img width="30" height="40" src="{{ vich_uploader_asset(project.category, 'imageFile') }}" alt="{{ project.category.name }}">
                     </div>
 
-                {% endfor %}
-            </div>
+                    <div class="p-3">
+                        {% if project.image %}
+                            <img width="200" height="150" src="{{ vich_uploader_asset(project, 'imageFile') }}" alt="{{ project.title }}">
+                        {% else %}
+                            <img width="200" height="150" src="{{ asset('img/no-image.png') }}" alt="{{ project.title }}">
+                        {% endif %}
+                        <h5 class="card-title m-3">{{project.title}}</h5>
+                        <div class="rows mb-3">
+                            {% if project.tags is empty %}
+                            {% else %}
+                                {% for tag in project.tags %}
+                                    <span class="badge text-bg-success"> {{tag.name}}</span> 
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Début : {{project.startDate|format_date()}} {{ project.endDate ? " | Fin : " ~ project.endDate|format_date() : ""}}</h6>
+                        <p class="ard-subtitle mb-2 text-body-secondary"><strong>Adresse : </strong>{{project.address}}</p>
+                        {% if project.phone %}
+                            <p class="ard-subtitle mb-2 text-body-secondary"><strong>Téléphone : </strong>{{project.phone}}</p>
+                        {% endif %}
+                        {% if project.availableSpace %}
+                            <p class="ard-subtitle mb-2 text-body-secondary"><strong>Nombre de participants : </strong>0/{{project.availableSpace}}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <a class="btn btn-success" href="#" data-bs-toggle="modal" data-bs-target="{{'#modal'~project.id}}">Voir aperçu de la page du projet</a>
+                        <div class="m-3">
+                            <a href="{{path('user_project_edit', {'id':project.id} )}}"><i class="fa-solid fa-pen-to-square fa-lg m-1" ></i></a>
+                            <form class="d-inline" action="{{path('user_project_delete', {id:project.id})}}" method="post">
+                                <input type="hidden" name="_csrf_token" value="{{csrf_token('delete_project_'~project.id)}}">
+                                <button class="border-0 bg-transparent" onclick="return confirm('Voulez-vous vraiment supprimer cet article ?')" type="submit"><i class="color-danger fa-solid fa-trash fa-lg m-1" style="color: #df0707;"></i></button>
+                            </form>
+                        </div>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">{{ project.createdAt >= project.updatedAt ? "Créé le "~project.createdAt|format_date() : "Modifié le "~project.updatedAt|format_date()}}</h6>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal w-100" id="{{'modal'~project.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop" aria-hidden="true">
+                    <div class="modal-dialog w-100">
+                        <div class="modal-content w-100">
+
+                                {% if project.image %}
+                                    <div class="text-center my-5" style="height: 400px">
+                                        <img class="img-fluid h-100 shadow" src="{{ vich_uploader_asset(project, 'imageFile') }}" alt="{{ project.title }}">
+                                    </div>
+                                {% else %}
+                                    <div class="text-center my-5">
+                                        <img width="200" height="200" src="{{ asset('img/no-image.png') }}" alt="{{ project.title }}">
+                                    </div>
+                                {% endif %}
+
+                            <div id="editor" class="modal-body container w-100">
+                                {{project.content|raw}}
+                            </div>
+                            <div class="modal-footer w-100">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>                    
+
+            {% endfor %}
         </div>
-
-
     </div>
+
 {% endblock %}

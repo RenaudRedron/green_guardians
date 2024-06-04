@@ -3,10 +3,9 @@ let map;
 
 async function initMap() {
 
-
+  // On récupère les données stocké dans l'attribut datadataProjects de la div "map"
   var dataProjects = document.getElementById("map");
   let p = dataProjects.dataset.projects
-
 
   // On importe l'objet Map de google.maps
   const { Map } = await google.maps.importLibrary("maps");
@@ -25,42 +24,71 @@ async function initMap() {
   // Tableaux contenant toute les coordonnées des répères indique aussi le title et le type
   let markers = [];
 
-  console.log(JSON.parse(p))
+
   JSON.parse(p).forEach(element => {
-    markers.push([{ lat: element.latitude, lng: element.longitude }, element.title, element.content, 0]);
+
+    // Si le projet possède une date de fin
+    if (element.endDate) {
+
+      // On récupère la date de fin en formation php
+      var myDate = element.endDate;
+
+      // On utilise split pour formaté la date afin de pouvoir l'utilisé coté javascript
+      myDate = myDate.split("T");
+
+      // On instancie une nouvelle date en format timestamp ( on ajoute une journée pour include les projet du jour actuel )
+      var newDate = new Date(myDate[0]).getTime() + (86400*1000)
+        
+      // on compare avec la date actuelle
+      if (newDate >=  new Date().getTime() )
+      { 
+        // Si la date de fin est plus grande ou egale avec celle actuelle alors on affiche le marqueur
+        markers.push([{ lat: element.latitude, lng: element.longitude }, element.id, element.image, element.title, element.description, element.email, element.phone, element.category.image, element.startDate, element.endDate]);
+      }
+
+    } else {
+      // Si la date de fin n'ai pas renseigné alors on affiche directement le marqueur
+      markers.push([{ lat: element.latitude, lng: element.longitude }, element.id, element.image, element.title, element.description, element.email, element.phone, element.category.image, element.startDate, element.endDate]);
+    }
+
   });
 
-  // On boucle sur le tableaux markers pour placer nos repère sur la carte
-  markers.forEach(([position, title, content, type], i) => {
-    
-    // On choisi l'image à afficher selon le type du repère
-    let image = ''
-    if ( type == 0 ) {
-      image = "/img/pointeur-arbre.png";
-    } else if ( type == 1 ) {
-      image = "/img/pointeur-dechet.png";
-    } else {}
+  console.log(markers)
 
-    // On crai le repère
+  // On boucle sur le tableaux markers pour placer nos repère sur la carte
+  markers.forEach(([position, id, image, title, description, email, phone, category_image, start_date, end_date], i) => {
+    // On créé le repère
     const marker = new google.maps.Marker({
       position: position,
       map,
-      icon: image,
+      icon: "/img/upload/markers/"+category_image,
       title: title,
     });
 
+      // On utilise split pour formaté la date de début
+      start_date = start_date.split("T");
+      start_date = start_date[0].split("-");
+      start_date = start_date[2]+'/'+start_date[1]+'/'+start_date[0]
+
+      if (end_date) {
+      // On utilise split pour formaté la date de fin
+      end_date = end_date.split("T");
+      end_date = end_date[0].split("-");
+      end_date = end_date[2]+'/'+end_date[1]+'/'+end_date[0]
+      }
+      
     // Affichage de l'infobull
     const contentString =
       '<div id="content">' +
-      '<div id="siteNotice">' +
-      "</div>" +
-      '<h1 id="firstHeading" class="firstHeading">'+title+'</h1>' +
+      '<h3 id="firstHeading" class="mb-3">'+title+'</h3>' +
+      "<p>Début : "+start_date + (end_date ? " | Fin : "+end_date : "" )+"</p>" +
       '<div id="bodyContent">' +
-      "<p>"+content+"</p>" +
-      '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
-      "https://en.wikipedia.org/w/index.php?title=Uluru</a> " +
-      "(last visited June 22, 2009).</p>" +
-      "</div>" +
+      "<h5>Description du projet</h5>" +
+      "<p>"+description+"</p>" +
+      "<h5>Contact</h5>" +
+      '<p>Adresse email: '+email+' </p>' +
+      (phone ? '<p>Numéro de téléphone: '+phone+' </p>' : "") +
+      "<p class='text-center'><a class='btn btn-success' href='/visitor/project/"+id+"/show'>Voir la page du projet</a></p>" +
       "</div>";
 
     // On crai l'infobull

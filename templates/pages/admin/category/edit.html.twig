@@ -19,6 +19,23 @@
                 {{ form_widget(formCategory.name, {"attr": {"class":"form-control", "autofocus":"autofocus"}})}}
             </div>
 
+            <div class="mb-4 row">
+
+                <div class="col-md-6 text-center">
+                    {% if category.image %}
+                        <img width="30" height="40" src="{{ vich_uploader_asset(category, 'imageFile') }}" alt="{{ category.name }}">
+                    {% else %}
+                        <img width="30" height="40" src="{{ asset('img/no-image.png') }}" alt="{{ category.name }}">
+                    {% endif %}
+                </div>
+                <div class="col-md-6 d-flex flex-column justify-content-center">
+                    <label for="admin_category_form_imageFile_image">Image</label>
+                    <div class="text-danger">{{ form_errors(formCategory.imageFile) }}</div>
+                    {{ form_widget(formCategory.imageFile, {"attr": {"class":"form-control mb-3"}}) }}
+                </div>
+
+            </div>          
+
             <div class="mb-3">
                 <label for="">Description</label>
                 <div class="text-danger">{{ form_errors(formCategory.description) }}</div>
@@ -26,7 +43,7 @@
             </div>
 
             <div class="mb-3">
-                <input formnovalidate type="submit" class="btn btn-success shadow w-100" value="Ajouter la catégorie">
+                <input formnovalidate type="submit" class="btn btn-success shadow w-100" value="Modifier la catégorie">
             </div> 
 
         {{ form_end(formCategory) }}

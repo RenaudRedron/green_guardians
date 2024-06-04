@@ -1,0 +1,120 @@
+{% set themes = 'themes/base_visitor.html.twig' %}
+
+{% extends themes %}
+
+{% block title %}Page project{% endblock %}
+
+{% block description %}Page projet de Green Guardians{% endblock %}
+
+{% block keywords %}Détail, Show, Projet{% endblock %}
+
+{% block quill %}
+
+<style>
+
+.modal-dialog  {
+    max-width: 80%;
+}
+
+.ql-align-center {
+    text-align:center
+}
+
+.ql-align-right {
+    text-align:right
+}
+
+.ql-align-left {
+    text-align:left
+}
+
+.ql-align-justify {
+    text-align:justify
+}
+
+</style>
+
+<!-- Include the Quill library -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+
+<script>
+    const quill = new Quill('#editor');
+</script>
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        {% if project[0].image %}
+            <div class="text-center my-5" style="height: 400px">
+                <img class="img-fluid h-100 shadow" src="{{ vich_uploader_asset(project[0], 'imageFile') }}" alt="{{ project[0].title }}">
+            </div>
+        {% else %}
+            <div class="text-center my-5">
+                <img width="200" height="200" src="{{ asset('img/no-image.png') }}" alt="{{ project[0].title }}">
+            </div>
+        {% endif %}
+
+        <div class="text-center mb-3">
+            <a class="btn btn-success" href="#">Participer au projet</a>            
+            <a class="btn btn-danger" href="#">Signaler le projet</a>
+        </div>
+
+        <div class="accordion mb-5 " id="accordionPanelsStayOpenExample">
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse1" aria-expanded="true" aria-controls="panelsStayOpen-collapse1">
+                    Détail du projet
+                </button>
+                </h2>
+                <div id="panelsStayOpen-collapse1" class="accordion-collapse collapse show">
+                    <div class="accordion-body" id="editor">
+                        {{project[0].content|raw}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse2" aria-expanded="false" aria-controls="panelsStayOpen-collapse2">
+                    Information sur le projet
+                </button>
+                </h2>
+                <div id="panelsStayOpen-collapse2" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse3" aria-expanded="false" aria-controls="panelsStayOpen-collapse3">
+                    Liste des participants
+                </button>
+                </h2>
+                <div id="panelsStayOpen-collapse3" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse4" aria-expanded="false" aria-controls="panelsStayOpen-collapse4">
+                    Commentaires
+                </button>
+                </h2>
+                <div id="panelsStayOpen-collapse4" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}

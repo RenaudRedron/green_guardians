@@ -14,13 +14,19 @@
         {{ form_start(formCategory) }}
 
             <div class="mb-3">
-                <label for="">Nom de catégorie<strong class="text-danger">*</strong></label>
+                <label for="category_form_name">Nom de catégorie<strong class="text-danger">*</strong></label>
                 <div class="text-danger">{{ form_errors(formCategory.name) }}</div>
                 {{ form_widget(formCategory.name, {"attr": {"class":"form-control", "autofocus":"autofocus"}})}}
             </div>
 
             <div class="mb-3">
-                <label for="">Description</label>
+                <label for="category_form_imageFile_file">Image</label>
+                <div class="text-danger">{{ form_errors(formCategory.imageFile) }}</div>
+                {{ form_widget(formCategory.imageFile, {"attr": {"class":"form-control"}}) }}
+            </div>
+
+            <div class="mb-3">
+                <label for="category_form_description">Description</label>
                 <div class="text-danger">{{ form_errors(formCategory.description) }}</div>
                 {{ form_widget(formCategory.description, {"attr": {"class":"form-control"}})}}
             </div>

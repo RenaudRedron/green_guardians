@@ -17,8 +17,9 @@
 {% endblock %}
 
 {% block main %}
-    <!-- Div d'affichage de la carte google -->
-    <div id="map" data-projects="{{ projects|serialize(format = 'json') }}"></div>
+    {# Div d'affichage de la carte google #}
+    {# Utilisation de data-projects pour stocké et pour après passé les données serialisés à map.js  #}
+    <div id="map" class="w-100" data-projects="{{ markers }}"></div>
 
     <section class="main_article">
     
@@ -27,28 +28,45 @@
                 <p>Aucun projet pour le moment.</p>
             </div>
         {% endif %}
-
         {% for project in projects %}
             
             <article class="main_article_container">
-                <div class="main_article_flex_item_left">
-                    {% if project.image %}
-                        <img src="{{ vich_uploader_asset(project, 'imageFile') }}" alt="{{ project.title }}">
-                    {% else %}
-                        <img src="{{ asset('img/no-image.png') }}" alt="{{ project.title }}">
-                    {% endif %}
-                </div>
+                <a href="{{path('user_project_show',{'id':project.id})}}">
+                    <div class="main_article_flex_item_left">
+                        {% if project.image %}
+                            <img src="{{ vich_uploader_asset(project, 'imageFile') }}" alt="{{ project.title }}">
+                        {% else %}
+                            <img height="200" width="200" src="{{ asset('img/no-image.png') }}" alt="{{ project.title }}">
+                        {% endif %}
+                    </div>
+                </a>
                 <div class="main_article_item_right_flex_container">
                     <div class="main_article_flex_container">
-                        <h2 class='main_article_flex_content_h2'>{{project.title}}</h2>
-                        <img src={{ asset('img/icon_nofavori.png') }} alt="">
+                        <a href="{{path('user_project_show',{'id':project.id})}}"><h2 class='main_article_flex_content_h2'>{{project.title}}</h2></a>
                     </div>
+
                     <div class='main_article_item_right_flex_content_div'>
                         <p>{{project.address}}</p>
-                        <p>Projet à venir (10 juin 2024)</p>
+
+                        {% if project.startDate|date('Y-m-d') > "now"|date('Y-m-d') %}
+                        <p>Projet à venir ({{project.startDate|format_date()}})</p>
+                        {% elseif project.endDate|date('Y-m-d') < "now"|date('Y-m-d') %}
+                        <p>Le projet est terminé</p>
+                        {% else %}
+                        <p>Le projet a commencé le {{project.startDate|format_date()}} {{ project.endDate ? " et finira le "~project.endDate|format_date() : ""}}</p>
+                        {% endif %}
+
                     </div>
-                    <p class='main_article_item_right_flex_content_p'>{{project.content}}
+                    <p class='main_article_item_right_flex_content_p'>{{project.description}}
                     </p>
+                    <div class="rows">
+                        {% if project.tags is empty %}
+                        {% else %}
+                            {% for tag in project.tags %}
+                                <span class="badge text-bg-success"> {{tag.name}}</span> 
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
             </article>
 
