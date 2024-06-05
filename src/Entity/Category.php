@@ -37,6 +37,7 @@ class Category
         extensions: ['png', 'jpg', 'jpeg', 'webp'],
         extensionsMessage: 'Seuls les images en formats .png, .jpg, .jpeg, où .webp sont autorisés',
     )]
+    #[Assert\NotBlank(message: "L'image de catégorie est obligatoire.")]
     #[Vich\UploadableField(mapping: 'markers', fileNameProperty: 'image')]
     private ?File $imageFile = null;
 

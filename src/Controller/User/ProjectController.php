@@ -5,9 +5,11 @@ namespace App\Controller\User;
 use App\Entity\User;
 use DateTimeImmutable;
 use App\Entity\Project;
+use App\Entity\ProjectUser;
 use App\Form\UserProjectFormType;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\ProjectUserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,7 +20,8 @@ class ProjectController extends AbstractController
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private ProjectRepository $projectRepository
+        private ProjectRepository $projectRepository,
+        private ProjectUserRepository $projectUserRepository
     ) {
     }
 
@@ -35,7 +38,8 @@ class ProjectController extends AbstractController
         $user = $this->getUser();
 
         return $this->render('pages/user/project/index.html.twig', [
-            "projects" => $this->projectRepository->findBy(array("user" => $user->getId())) // On envoi les projets qui appartient a l'user connecté
+            "projects" => $this->projectRepository->findBy(array("user" => $user->getId())), // On envoi les projets qui appartient a l'user connecté
+            "userParticipates" => ( $user ? $this->projectUserRepository->findAll() : 0)
         ]);
     }
 
@@ -257,12 +261,113 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/visitor/project/{id<\d+>}/show', name: 'user_project_show', methods: ["GET"])]
-    public function show($id): Response
+    public function show(Project $project): Response
     {   
 
+        /**
+         * Récupérons l'utilisateur connecté
+         * 
+         * @var User
+         */
+
+        // On récupere les données de l'utilisateur connecté
+        $user = $this->getUser();
 
         return $this->render('pages/visitor/project/show.html.twig', [
-            "project" => $this->projectRepository->findBy(array("id" => $id))
+            "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
+            "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
         ]);
     }
+
+    #[Route('/user/project/{id<\d+>}/join', name: 'user_project_join', methods: ["POST"])]
+    public function publish(Project $project, Request $request): Response
+    {
+
+        // On instancie l'objet ProjectUser
+        $projectUser = new ProjectUser;
+
+        /**
+         * Récupérons l'utilisateur connecté
+         * 
+         * @var User
+         */
+
+        // On récupere les données de l'utilisateur connecté
+        $user = $this->getUser();
+
+        // On récupère l'id de utilisateur a ajouter
+        $projectUser->setProject($project);
+        // On récupère l'id du projet a ajouter
+        $projectUser->setUser($user);
+
+        // Si le csrf token est valide
+        if ($this->isCsrfTokenValid('join_project_' . $project->getId(), $request->request->get('_csrf_token'))) {
+            
+            // On vérifie si le projet est terminé
+            if ($project->getEndDate() != null ){
+                if ( $project->getEndDate() < new DateTimeImmutable)
+                {
+                    // Message flash
+                    $this->addFlash("warning", "Le projet est terminé.");
+
+                    return $this->redirectToRoute("user_project_show", [
+                        "id" => $project->getId(),
+                        "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
+                        "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+                    ]);
+                }
+            }
+
+            // On vérifie si l'utilisateur participe deja au project
+            if (count($this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId()))) == 0) {
+                // Si le nombre d'entrées est égale à 0 l'utilisateur ne participe pas encore a ce projet
+                
+
+                // Si le projet dispose de place limité
+                if ( $project->getAvailableSpace() != null )
+                {
+                    // On récupère combien de personne participe deja au projet et on vérifi s'il reste de la place
+                    if (count($this->projectUserRepository->findBy(array("project" => $project->getId()))) == $project->getAvailableSpace())
+                    {
+
+                        // Message flash
+                        $this->addFlash("warning", "Impossible de participer au projet, le nombre de places disponibles est atteint. Contactez directement l'organisateur du projet pour savoir s'il serait possible d'obtenir plus de places.");
+
+                        return $this->redirectToRoute("user_project_show", [
+                            "id" => $project->getId(),
+                            "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
+                            "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+                        ]);
+
+                    }
+
+                }
+
+                // Utilisation de l'entity manager pour préparer la requete
+                $this->entityManager->persist($projectUser);
+
+                // Message flash
+                $this->addFlash("success", "Votre participation au projet a été enregistrée.");
+            } else {
+                // Sinon l'utilisateur participe déjà au projet
+
+                // On retire le
+                $this->entityManager->remove($this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId()))[0]);
+
+                // Message flash
+                $this->addFlash("success", "Votre participation au projet a été retirée.");
+            }
+
+            // On utilise l'entity manager pour exécuter la requête préparer
+            $this->entityManager->flush();
+        }
+
+        return $this->redirectToRoute("user_project_show", [
+            "id" => $project->getId(),
+            "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
+            "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+        ]);
+
+    }
+
 }

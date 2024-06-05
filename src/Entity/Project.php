@@ -241,9 +241,16 @@ class Project
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'projects')]
     private Collection $tags;
 
+    /**
+     * @var Collection<int, ProjectUser>
+     */
+    #[ORM\OneToMany(targetEntity: ProjectUser::class, mappedBy: 'project', orphanRemoval: true)]
+    private Collection $projectUsers;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->projectUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -536,6 +543,36 @@ class Project
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProjectUser>
+     */
+    public function getProjectUsers(): Collection
+    {
+        return $this->projectUsers;
+    }
+
+    public function addProjectUser(ProjectUser $projectUser): static
+    {
+        if (!$this->projectUsers->contains($projectUser)) {
+            $this->projectUsers->add($projectUser);
+            $projectUser->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjectUser(ProjectUser $projectUser): static
+    {
+        if ($this->projectUsers->removeElement($projectUser)) {
+            // set the owning side to null (unless already changed)
+            if ($projectUser->getProject() === $this) {
+                $projectUser->setProject(null);
+            }
+        }
 
         return $this;
     }

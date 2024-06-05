@@ -95,7 +95,15 @@
                             <p class="ard-subtitle mb-2 text-body-secondary"><strong>Téléphone : </strong>{{project.phone}}</p>
                         {% endif %}
                         {% if project.availableSpace %}
-                            <p class="ard-subtitle mb-2 text-body-secondary"><strong>Nombre de participants : </strong>0/{{project.availableSpace}}</p>
+                            {% set number = 0 %} 
+
+                            {% for participate in userParticipates %}
+                                {% if participate.project.id == project.id %}
+                                    {% set number = number + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                        
+                            <p class="ard-subtitle mb-2 text-body-secondary"><strong>Nombre de participants : </strong>{{ number }}/{{project.availableSpace}}</p>
                         {% endif %}
                     </div>
                     <div>
