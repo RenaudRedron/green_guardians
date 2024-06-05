@@ -44,21 +44,63 @@
 {% endblock %}
 
 {% block main %}
+
     <div class="container">
+
         {% if project[0].image %}
-            <div class="text-center my-5" style="height: 400px">
+            <div class="text-center mt-5 mb-3" style="height: 400px">
                 <img class="img-fluid h-100 shadow" src="{{ vich_uploader_asset(project[0], 'imageFile') }}" alt="{{ project[0].title }}">
             </div>
         {% else %}
-            <div class="text-center my-5">
+            <div class="text-center mt-5 mb-3">
                 <img width="200" height="200" src="{{ asset('img/no-image.png') }}" alt="{{ project[0].title }}">
             </div>
         {% endif %}
 
-        <div class="text-center mb-3">
-            <a class="btn btn-success" href="#">Participer au projet</a>            
-            <a class="btn btn-danger" href="#">Signaler le projet</a>
-        </div>
+
+        <div class="rows mb-5 text-center">
+            {% if project[0].tags is empty %}
+            {% else %}
+            {% for tag in project[0].tags %}
+                <span class="badge text-bg-success">{{tag.name}} </span> 
+            {% endfor %}
+            {% endif %}
+        </div>     
+        
+        {% include "components/_alert.html.twig" %}
+
+            <div class="text-center mt-5 mb-3 d-flex justify-content-center">
+                {% if project[0].endDate|date('Y-m-d') != null and project[0].endDate|date('Y-m-d') < "now"|date('Y-m-d') %}
+                {% else %}
+                    <form class="d-inline m-1" action="{{path('user_project_join', {'id':project[0].id})}}" method="post">
+                        <input type="hidden" name="_csrf_token" value="{{csrf_token('join_project_'~project[0].id)}}">                    
+
+                        {% if app.user is null %}
+                            <input onclick="return alert('Vous devez être connecté pour participer à un projet')" class="btn btn-success" type="button" value="Participer au projet">
+                        {% else %}
+
+                            {% if app.user.email == project[0].user.email %}
+                            {% elseif userParticipates|length > 0 %}
+                                <input onclick="this.form.submit()" class="btn btn-secondary" type="button" value="Retirer la participation">
+                            {% else %}
+                                <input onclick="this.form.submit()" class="btn btn-success" type="button" value="Participer au projet">
+                            {% endif %}
+
+                        {% endif %}
+                    </form>
+                {% endif %}
+
+                {% if app.user is null %}
+
+                <a class="btn btn-danger m-1" onclick="return alert('Vous devez être connecté pour signaler un projet')" href="#">Signaler le projet</a>
+
+                {% else %}
+                    {% if app.user.email == project[0].user.email %}
+                    {% else %}
+                        <a class="btn btn-danger m-1" href="#">Signaler le projet</a>
+                    {% endif %}
+                {% endif %}
+            </div> 
 
         <div class="accordion mb-5 " id="accordionPanelsStayOpenExample">
 
@@ -83,7 +125,20 @@
                 </h2>
                 <div id="panelsStayOpen-collapse2" class="accordion-collapse collapse">
                     <div class="accordion-body">
-                        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                        {% if project[0].startDate|date('Y-m-d') > "now"|date('Y-m-d') %}
+                            <p><strong>Projet à venir :</strong> {{project[0].startDate|format_date()}}</p>
+                        {% elseif project[0].endDate|date('Y-m-d') < "now"|date('Y-m-d') %}
+                            <p><strong>Le projet est terminé</strong></p>
+                        {% else %}
+                            <p><strong>Le projet a commencé :</strong> {{project[0].startDate|format_date()}} {{ project[0].endDate ? " - "~project[0].endDate|format_date() : ""}}</p>
+                        {% endif %}
+                        <p><strong>Adresse email de contact :</strong> {{project[0].email}}</p>
+                        <p><strong>Numéro de téléphone de contact :</strong> {{project[0].phone}}</p>
+                        <p><strong>Adresse :</strong> {{project[0].address}}</p>
+                        {% if project[0].availableSpace %}
+                            <p><strong>Place :</strong> {{project[0].projectUsers|length}}/{{project[0].availableSpace}}</p>
+                        {% endif %}
+                        <p><strong>Date de création :</strong> {{project[0].createdAt|format_date()}}</p>
                     </div>
                 </div>
             </div>
@@ -91,12 +146,20 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse3" aria-expanded="false" aria-controls="panelsStayOpen-collapse3">
-                    Liste des participants
+                    Liste des participants ({{project[0].projectUsers|length}})
                 </button>
                 </h2>
                 <div id="panelsStayOpen-collapse3" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-                        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    <div class="accordion-body d-flex">
+
+                    {% if project[0].projectUsers|length > 0 %}
+                        {% for projectUser in project[0].projectUsers %}
+                            <h5><span class="badge text-bg-success m-1">{{projectUser.user.firstName}} {{projectUser.user.lastName}}</span></h5>
+                        {% endfor %}
+                    {% else %}
+                        <p>Pas de participants pour le moment.</p>
+                    {% endif %}
+
                     </div>
                 </div>
             </div>
@@ -109,8 +172,7 @@
                 </h2>
                 <div id="panelsStayOpen-collapse4" class="accordion-collapse collapse">
                     <div class="accordion-body">
-                        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-                    </div>
+                        <strong>Bientôt</strong>
                 </div>
             </div>
 
