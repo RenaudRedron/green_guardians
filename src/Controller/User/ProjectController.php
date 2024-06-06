@@ -4,9 +4,12 @@ namespace App\Controller\User;
 
 use App\Entity\User;
 use DateTimeImmutable;
+use App\Entity\Comment;
 use App\Entity\Project;
 use App\Entity\ProjectUser;
+use App\Form\CommentFormType;
 use App\Form\UserProjectFormType;
+use App\Repository\CommentRepository;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ProjectUserRepository;
@@ -21,7 +24,8 @@ class ProjectController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ProjectRepository $projectRepository,
-        private ProjectUserRepository $projectUserRepository
+        private ProjectUserRepository $projectUserRepository,
+        private CommentRepository $commentRepository
     ) {
     }
 
@@ -260,8 +264,8 @@ class ProjectController extends AbstractController
         return $this->redirectToRoute("user_project_list");
     }
 
-    #[Route('/visitor/project/{id<\d+>}/show', name: 'user_project_show', methods: ["GET"])]
-    public function show(Project $project): Response
+    #[Route('/visitor/project/{id<\d+>}/show', name: 'user_project_show', methods: ["GET","POST"])]
+    public function show(Project $project, Request $request): Response
     {   
 
         /**
@@ -273,14 +277,63 @@ class ProjectController extends AbstractController
         // On récupere les données de l'utilisateur connecté
         $user = $this->getUser();
 
+        // On instancie un nouvelle objet Project
+        $comment = new Comment();
+
+        // Création du formulaire
+        $form = $this->createForm(CommentFormType::class, $comment);
+
+        // On récupere les donnés renvoyer après avoir rempli le formulaire
+        $form->handleRequest($request);
+
+        // On test la validation du formulaire
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+
+            if ( $user == null )
+            {
+                $this->addFlash("warning", "Vous devez être connecté pour ajouter un commentaire.");
+            }
+            else {
+
+                // On ajoute la date de création et de modification
+                $comment->setCreatedAt(new DateTimeImmutable());
+                $comment->setUpdatedAt(new DateTimeImmutable());      
+                
+                // On ajoute l'utilisateur qui a ajouter le commentaire
+                $comment->setUser($user);   
+                
+                // On ajoute le projet sur le quel on commente
+                $comment->setProject($project);    
+
+                
+                // On ajoute l'objet en BDD
+                $this->entityManager->persist($comment);
+                $this->entityManager->flush();
+
+                $this->addFlash("success", "Le commentaire a été ajouter avec succès.");
+
+                return $this->redirectToRoute("user_project_show", [
+                    "id" => $project->getId(),
+                    "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                    "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
+                    "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+                ]);
+
+            }
+
+        }
+
         return $this->render('pages/visitor/project/show.html.twig', [
+            "form" => $form,
+            "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
             "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
             "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
         ]);
     }
 
     #[Route('/user/project/{id<\d+>}/join', name: 'user_project_join', methods: ["POST"])]
-    public function publish(Project $project, Request $request): Response
+    public function join(Project $project, Request $request): Response
     {
 
         // On instancie l'objet ProjectUser
@@ -312,6 +365,7 @@ class ProjectController extends AbstractController
 
                     return $this->redirectToRoute("user_project_show", [
                         "id" => $project->getId(),
+                        "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
                         "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
                         "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
                     ]);
@@ -335,6 +389,7 @@ class ProjectController extends AbstractController
 
                         return $this->redirectToRoute("user_project_show", [
                             "id" => $project->getId(),
+                            "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
                             "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
                             "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
                         ]);
@@ -364,10 +419,146 @@ class ProjectController extends AbstractController
 
         return $this->redirectToRoute("user_project_show", [
             "id" => $project->getId(),
+            "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
             "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
             "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
         ]);
 
+    }
+
+    #[Route('/user/comment/{id<\d+>}/{id_project<\d+>}/edit', name: 'user_comment_edit', methods: ["GET","POST"])]
+    public function editComment(int $id, int $id_project, Request $request): Response
+    {
+        
+        // Récupérez le commentaire et le projet en utilisant les identifiants
+        $comment = $this->entityManager->getRepository(Comment::class)->find($id);
+        $project = $this->entityManager->getRepository(Project::class)->find($id_project);
+
+        /**
+         * Récupérons l'utilisateur connecté
+         * 
+         * @var User
+         */
+
+        // On récupere les données de l'utilisateur connecté
+        $user = $this->getUser();
+
+        // On controle si le commentaire que l'utilisateur souhaite modifier soit bien son commentaire
+        if ( $project == null)
+        {
+            return $this->redirectToRoute("app_map");
+        }
+        elseif ( $comment == null )
+        {
+            return $this->redirectToRoute("user_project_show", [
+                "id" => $project->getId(),
+                "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
+                "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+            ]);
+        }
+        elseif ( $comment->getProject()->getId() != $project->getId() || $this->getUser() != $comment->getUser()) {
+            return $this->redirectToRoute("user_project_show", [
+                "id" => $project->getId(),
+                "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
+                "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+            ]);
+        } else {}
+
+        // Création du formulaire
+        $form = $this->createForm(CommentFormType::class, $comment);
+
+        // On récupere les donnés renvoyer après avoir rempli le formulaire
+        $form->handleRequest($request);
+
+        // On test la validation du formulaire
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+
+            // On ajoute la date de création et de modification
+            $comment->setUpdatedAt(new DateTimeImmutable());      
+                
+            // On ajoute l'objet en BDD
+            $this->entityManager->persist($comment);
+            $this->entityManager->flush();
+
+            $this->addFlash("success", "Le commentaire a été modifier avec succès.");
+
+            return $this->redirectToRoute("user_project_show", [
+                    "id" => $project->getId(),
+                    "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                    "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
+                    "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+            ]);
+
+        }
+
+        return $this->render('pages/user/comment/edit.html.twig', [
+            "form" => $form->createView(),
+            "comment" => $comment
+        ]);
+    }
+
+    #[Route('/user/comment/{id<\d+>}/{id_project<\d+>}/delete', name: 'user_comment_delete', methods: ["POST"])]
+    public function deleteComment(int $id, int $id_project, Request $request): Response
+    {
+
+        // Récupérez le commentaire et le projet en utilisant les identifiants
+        $comment = $this->entityManager->getRepository(Comment::class)->find($id);
+        $project = $this->entityManager->getRepository(Project::class)->find($id_project);
+
+        /**
+         * Récupérons l'utilisateur connecté
+         * 
+         * @var User
+         */
+
+        // On récupere les données de l'utilisateur connecté
+        $user = $this->getUser();
+
+        // On controle si le commentaire que l'utilisateur souhaite modifier soit bien son commentaire
+        if ( $project == null)
+        {
+            return $this->redirectToRoute("app_map");
+        }
+        elseif ( $comment == null )
+        {
+            return $this->redirectToRoute("user_project_show", [
+                "id" => $project->getId(),
+                "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
+                "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+            ]);
+        }
+        elseif ( $comment->getProject()->getId() != $project->getId() || $this->getUser() != $comment->getUser()) {
+            return $this->redirectToRoute("user_project_show", [
+                "id" => $project->getId(),
+                "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
+                "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+            ]);
+        } else {}
+
+
+        if ($this->isCsrfTokenValid('delete_comment_' . $comment->getId(), $request->request->get('_csrf_token'))) {
+            // Si le token est valide
+
+            $this->addFlash("danger", "Le commentaire a été supprimer");
+
+            // On fait appel a entityManager pour préparer la requete
+            $this->entityManager->remove($comment);
+
+            // On fait appel a entityManager pour exécuter la requete
+            $this->entityManager->flush();
+        }
+
+        return $this->redirectToRoute("user_project_show", [
+            "id" => $project->getId(),
+            "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+            "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
+            "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+        ]);
     }
 
 }

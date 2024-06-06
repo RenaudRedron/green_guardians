@@ -8,6 +8,10 @@
 
 {% block keywords %}Détail, Show, Projet{% endblock %}
 
+{% block fontAwesome %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock %}
+
 {% block quill %}
 
 <style>
@@ -166,16 +170,69 @@
 
             <div class="accordion-item">
                 <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse4" aria-expanded="false" aria-controls="panelsStayOpen-collapse4">
-                    Commentaires
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse4" aria-expanded="true" aria-controls="panelsStayOpen-collapse4">
+                    Commentaires ({{comments|length}})
                 </button>
                 </h2>
-                <div id="panelsStayOpen-collapse4" class="accordion-collapse collapse">
+                <div id="panelsStayOpen-collapse4" class="accordion-collapse collapse show">
                     <div class="accordion-body">
-                        <strong>Bientôt</strong>
+
+
+                        {% if app.user %}
+                            
+                        <div class="container">
+                                {{ form_start(form) }}
+                                    <div class="mb-4">
+                                        <label for="">Commentaire<strong class="text-danger">*</strong></label>
+                                        <div class="text-danger">{{ form_errors(form.content) }}</div>
+                                        {{ form_widget(form.content, {"attr": {"class":"form-control"}}) }}
+                                    </div>
+                                    <div class="mb-3 text-center">
+                                        <button formnovalidate type="submit" class="btn btn-success w-75">Ajouter un commentaire</button>
+                                    </div>
+                                {{ form_end(form) }}
+                            <hr class="mx-auto">
+                        </div>
+                        {% else %}
+
+                        <p class="text-center mt-3">Vous devez être connecté pour ajouter un commentaire.</p>
+                            <hr class="mx-auto">
+
+                        {% endif %}
+
+                        <div class="container-fluid">
+                            {% if comments|length == 0 %}
+                                <p class="text-center">Pas encore de commentaire.</p>
+                            {% endif %}
+                            {% for comment in comments %}
+                                <div class="m-3">
+                                    <div class="d-flex justify-content-between flex-wrap">
+                                        <div>{{comment.user.email}}</div>
+                                        {% if comment.user == app.user %}
+                                            <div>
+                                                <a href="{{path('user_comment_edit', {'id':comment.id,'id_project':comment.project.id} )}}"><i class="fa-solid fa-pen-to-square fa-lg" ></i></a>
+                                                <form class="d-inline" action="{{path('user_comment_delete', {'id':comment.id,'id_project':comment.project.id})}}" method="post">
+                                                    <input type="hidden" name="_csrf_token" value="{{csrf_token('delete_comment_'~comment.id)}}">
+                                                    <button class="border-0 bg-transparent" onclick="return confirm('Voulez-vous vraiment supprimer le commentaire ?')" type="submit"><i class="color-danger fa-solid fa-trash fa-lg m-1" style="color: #df0707;"></i></button>
+                                                </form>                            
+                                            </div>
+                                        {% endif %}      
+                                    </div>
+                                    <div class="border border-2 rounded-3 p-3">
+                                        {{comment.content}}
+                                    </div>
+                                    <div class="text-end">
+                                        <p>
+                                        Le {{comment.createdAt|format_datetime()}}
+                                        {{ comment.updatedAt|format_datetime() > comment.createdAt|format_datetime() ? "Modifier le "~comment.updatedAt|format_datetime() : "" }}
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
 
     </div>
