@@ -1,0 +1,38 @@
+{% extends 'themes/base_visitor.html.twig' %}
+
+{% block title %}Modification d'un commentaire{% endblock %}
+
+{% block description %}Modification d'un commentaire sur Green Guardians{% endblock %}
+
+{% block keywords %}Modification, Commentaire, Edition{% endblock %}
+
+{% block main %}
+    <div class="p-5">
+
+        <h2 class="text-center mb-5">Modification d'un commentaire</h2>
+
+        {% include "components/_alert.html.twig" %}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 mx-auto">
+                    {{ form_start(form) }}
+                    
+                    <div class="mb-3">
+                        <label for="user_comment_form_content">Commentaire<strong class="text-danger">*</strong></label>
+                        <div class="text-danger">{{ form_errors(form.content) }}</div>
+                        {{ form_widget(form.content, {"attr": {"class":"form-control", "autofocus":"autofocus"}}) }}
+                    </div>
+
+                    <div class="mb-5">
+                        <input formnovalidate class="btn btn-primary shadow w-100" type="submit" value="Modifier le commentaire">
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+{% endblock %}
