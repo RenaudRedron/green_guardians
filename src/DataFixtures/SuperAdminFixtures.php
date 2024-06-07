@@ -38,6 +38,7 @@ class SuperAdminFixtures extends Fixture
         $passwordHashed = $this->hasher->hashPassword($superAdmin, "azerty12345.A");
 
         $superAdmin 
+                    ->setNickname("Admin")
                     ->setFirstName("Renaud")
                     ->setLastName("Redron")
                     ->setEmail("renaud.redron@gmail.com")

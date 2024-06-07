@@ -158,10 +158,10 @@
 
                     {% if project[0].projectUsers|length > 0 %}
                         {% for projectUser in project[0].projectUsers %}
-                            <h5><span class="badge text-bg-success m-1">{{projectUser.user.firstName}} {{projectUser.user.lastName}}</span></h5>
+                            <h5><span class="badge text-bg-success m-1">{{projectUser.user.nickname}}</span></h5>
                         {% endfor %}
                     {% else %}
-                        <p>Pas de participants pour le moment.</p>
+                        <p>Personne ne participe à ce projet pour le moment.</p>
                     {% endif %}
 
                     </div>
@@ -207,7 +207,7 @@
                             {% for comment in comments %}
                                 <div class="m-3">
                                     <div class="d-flex justify-content-between flex-wrap">
-                                        <div>{{comment.user.email}}</div>
+                                        <div>{{comment.user.nickname}}</div>
                                         {% if comment.user == app.user %}
                                             <div>
                                                 <a href="{{path('user_comment_edit', {'id':comment.id,'id_project':comment.project.id} )}}"><i class="fa-solid fa-pen-to-square fa-lg" ></i></a>

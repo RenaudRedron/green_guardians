@@ -43,11 +43,18 @@
             <div class="col-lg-6 d-flex justify-content-center align-items-center">
                 {{ form_start(registrationForm) }}
                     <h2 class="h3 mb-3 font-weight-normal">Inscrivez-vous</h2>
+
+                    <div class="mb-3">
+                        <label for="registration_form_nickname">Pseudonyme<strong class="text-danger">*</strong></label>
+                        <div class="text-danger">{{ form_errors(registrationForm.nickname) }}</div>
+                        {{ form_widget(registrationForm.nickname, {"attr": {"class":"form-control", "autofocus":"autofocus"}})}}
+                    </div>
+
                     <div class="row">
                         <div class="mb-3 col-md-6">
                             <label for="registration_form_firstName">Prénom<strong class="text-danger">*</strong></label>
                             <div class="text-danger">{{ form_errors(registrationForm.firstName) }}</div>
-                            {{ form_widget(registrationForm.firstName, {"attr": {"class":"form-control", "autofocus":"autofocus"}})}}
+                            {{ form_widget(registrationForm.firstName, {"attr": {"class":"form-control"}})}}
                         </div>
                         <div class="mb-3 col-md-6">
                             <label for="registration_form_lastName">Nom<strong class="text-danger">*</strong></label>

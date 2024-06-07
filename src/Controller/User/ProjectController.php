@@ -224,7 +224,7 @@ class ProjectController extends AbstractController
                         $this->entityManager->persist($project);
                         $this->entityManager->flush();
 
-                        $this->addFlash("success", "Le projet a été ajouter avec succès.");
+                        $this->addFlash("success", "Le projet a été modifier avec succès.");
 
                         return $this->redirectToRoute('user_project_list');
                     }
