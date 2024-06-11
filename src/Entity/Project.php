@@ -252,11 +252,18 @@ class Project
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'project', orphanRemoval: true)]
     private Collection $comments;
 
+    /**
+     * @var Collection<int, Reporting>
+     */
+    #[ORM\OneToMany(targetEntity: Reporting::class, mappedBy: 'project')]
+    private Collection $reportings;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
         $this->projectUsers = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->reportings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -607,6 +614,36 @@ class Project
             // set the owning side to null (unless already changed)
             if ($comment->getProject() === $this) {
                 $comment->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reporting>
+     */
+    public function getReportings(): Collection
+    {
+        return $this->reportings;
+    }
+
+    public function addReporting(Reporting $reporting): static
+    {
+        if (!$this->reportings->contains($reporting)) {
+            $this->reportings->add($reporting);
+            $reporting->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReporting(Reporting $reporting): static
+    {
+        if ($this->reportings->removeElement($reporting)) {
+            // set the owning side to null (unless already changed)
+            if ($reporting->getProject() === $this) {
+                $reporting->setProject(null);
             }
         }
 

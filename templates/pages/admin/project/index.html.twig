@@ -46,8 +46,8 @@
                         <th scope="col">Tags</th>
                         <th scope="col">Dates</th>
                         <th scope="col">Coordonnées</th>
-                        <th scope="col">Place</th>
-                        <th scope="col">Aperçu</th>
+                        <th scope="col">Participants</th>
+                        <th scope="col">Voir</th>
                         <th scope="col">Commentaires</th>
                         <th scope="col">Créé le</th>
                         <th scope="col">Modifier le</th>
@@ -63,6 +63,7 @@
                         </td>
                         <td>
                             {% if project.tags is empty %}
+                                ---
                             {% else %}
                                 {% for tag in project.tags %}
                                     <span class="badge text-bg-success"> {{tag.name}}</span> 
@@ -72,14 +73,31 @@
                         <td>Début : {{project.startDate|format_date()}} {{ project.endDate ? " | Fin : " ~ project.endDate|format_date() : ""}}</td>
                         <td>{{project.latitude}} {{project.longitude}}</td>
                         <td class="text-center">
-                        {% if project.availableSpace %}
-                            {{project.availableSpace}} 
-                        {% else %}
-                            ---
-                        {% endif %}
+                            {% set number = 0 %} 
+
+                            {% for participate in userParticipates %}
+                                {% if participate.project.id == project.id %}
+                                    {% set number = number + 1 %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if project.availableSpace %}
+                                {{ number }}/{{project.availableSpace}}
+                            {% else %}
+                                {{ number }}
+                            {% endif %}
                         </td>
-                        <td><a class="btn btn-success" href="#">Aperçu</a></td>
-                        <td class="text-center"><a class="btn btn-success" href="#">0</a></td>
+                        <td><a class="btn btn-success" href="{{path('user_project_show', {'id':project.id} )}}">Voir</a></td>
+                        <td class="text-center">
+                            {% set numberComment = 0 %} 
+
+                            {% for comment in comments %}
+                                {% if comment.project.id == project.id %}
+                                    {% set numberComment = numberComment + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            {{numberComment}}
+                        </td>
                         <td>{{project.createdAt|format_datetime()}}</td>
                         <td>{{project.updatedAt|format_datetime()}}</td>
                         <td>
@@ -90,10 +108,10 @@
                             </form>
                         </td>
                     </tr>
-                    {% endfor %}
+                {% endfor %}
             </tbody>
 
-        </table>
+        </table>        
     </div>
 
 {% endblock %} 

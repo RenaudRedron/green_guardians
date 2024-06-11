@@ -1,0 +1,126 @@
+{% extends 'themes/base_admin.html.twig' %}
+
+{% block title %}Liste des signalements{% endblock %}
+
+{% block description %}Liste des signalements de Green Guardians{% endblock %}
+
+{% block keywords %}Admin, Administration, Signalements{% endblock %}
+
+{# jQuery #}
+{% block jQuery %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{# DataTables -> Pour la pagination #}
+{% block dataTables %}
+
+<link href="https://cdn.datatables.net/v/bs5/dt-2.0.7/datatables.min.css" rel="stylesheet">
+
+<script src="https://cdn.datatables.net/v/bs5/dt-2.0.7/datatables.min.js"></script>
+
+<script>
+    $(document).ready( function () {
+        $('#myTable').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.7/i18n/fr-FR.json',
+            },
+        });
+    });
+</script>
+
+{% endblock %}
+
+{% block main %}
+
+    <h2 class="text-center m-5">Liste des signalements</h2>
+
+    {% include "components/_alert.html.twig" %}
+
+    <div class="table-responsive">
+
+        <table id="myTable" class="table table-hover table-bordered table-striped mx-auto text-center">
+            <thead class="table-dark">
+                <tr>
+                        <th scope="col">Sur</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Message</th>
+                        <th scope="col">Auteur</th>
+                        <th scope="col">Créé le</th>
+                        <th scope="col">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reporting %}
+                    <tr>
+                        <td>
+                        {% if report.project %}
+                            Projet
+                        {% else %}
+                            Commentaire
+                        {% endif %}
+                        </td>
+                        <td>
+                            {% if report.type == 0 %}
+                                Autre
+                            {% elseif report.type == 1 %}
+                                Discours haineux
+                            {% elseif report.type == 2 %}
+                                Spam
+                            {% elseif report.type == 3 %}
+                                Fausses informations
+                            {% elseif report.type == 4 %}
+                                Harcèlement
+                            {% elseif report.type == 5 %}
+                                Contenu illégal
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-success" href="#" data-bs-toggle="modal" data-bs-target="{{'#modal'~report.id}}">Voir</a>
+                        </td>
+                        <td>{{report.user.email}}</td>
+                        <td>{{report.createdAt|format_datetime()}}</td>
+                        <td>
+                            <form class="d-inline" action="{{path('admin_reporting_delete', {'id':report.id} )}}" method="post">
+                                <input type="hidden" name="_csrf_token" value="{{csrf_token('delete_report_'~report.id)}}">
+                                <input onclick="return confirm('Voulez-vous vraiment supprimer le signalement ?')" type="submit" class="btn btn-sm btn-danger" value="Supprimer">
+                            </form>
+                        </td>
+                    </tr>
+
+                    <!-- Modal -->
+                    <div class="modal w-100" id="{{'modal'~report.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop" aria-hidden="true">
+                        <div class="modal-dialog w-100">
+                            <div class="modal-content w-100">
+
+                                <h2 class="text-center mt-3">
+                                    {% if report.type == 0 %}
+                                        Autre
+                                    {% elseif report.type == 1 %}
+                                        Discours haineux
+                                    {% elseif report.type == 2 %}
+                                        Spam
+                                    {% elseif report.type == 3 %}
+                                        Fausses informations
+                                    {% elseif report.type == 4 %}
+                                        Harcèlement
+                                    {% elseif report.type == 5 %}
+                                        Contenu illégal
+                                    {% endif %}
+                                </h2>
+
+                                <div class="text-center my-5">
+                                    {{report.content}}
+                                </div>
+                                <div class="modal-footer w-100">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+{% endblock %} 

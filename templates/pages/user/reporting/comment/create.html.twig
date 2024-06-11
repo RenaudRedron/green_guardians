@@ -1,0 +1,43 @@
+{% extends 'themes/base_visitor.html.twig' %}
+
+{% block title %}Signaler le commentaire d'un projet{% endblock %}
+
+{% block description %}Signaler le commentaire d'un projet sur Green Guardians{% endblock %}
+
+{% block keywords %}Signaler, Comment{% endblock %}
+
+{% block main %}
+    <div class="p-5">
+
+        <h2 class="text-center mb-5">Signaler le commentaire d'un projet</h2>
+
+        {% include "components/_alert.html.twig" %}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 mx-auto">
+                    {{ form_start(form) }}
+
+                    <div class="mb-3">
+                        <label for="user_reporting_form_type">Type<strong class="text-danger">*</strong></label>
+                        <div class="text-danger">{{ form_errors(form.type) }}</div>
+                        {{ form_widget(form.type, {"attr": {"class":"form-control", "autofocus":"autofocus"}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="user_reporting_form_content">Message<strong class="text-danger">*</strong></label>
+                        <div class="text-danger">{{ form_errors(form.content) }}</div>
+                        {{ form_widget(form.content, {"attr": {"class":"form-control"}}) }}
+                    </div>
+
+                    <div class="mb-5">
+                        <input formnovalidate class="btn btn-primary shadow w-100" type="submit" value="Signaler le projet">
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+        
+    </div>
+{% endblock %}

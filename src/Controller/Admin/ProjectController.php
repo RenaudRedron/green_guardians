@@ -6,7 +6,9 @@ use App\Entity\User;
 use DateTimeImmutable;
 use App\Entity\Project;
 use App\Form\UserProjectFormType;
+use App\Repository\CommentRepository;
 use App\Repository\ProjectRepository;
+use App\Repository\ProjectUserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,15 +21,28 @@ class ProjectController extends AbstractController
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private ProjectRepository $projectRepository
+        private ProjectRepository $projectRepository,
+        private ProjectUserRepository $projectUserRepository,
+        private CommentRepository $commentRepository
     ) {
     }
 
     #[Route('/project/list', name: 'admin_project_index')]
     public function index(): Response
     {
+        /**
+         * Récupérons l'utilisateur connecté
+         * 
+         * @var User
+         */
+
+        // On récupere les données de l'utilisateur connecté
+        $user = $this->getUser();
+
         return $this->render('pages/admin/project/index.html.twig', [
-            "projects" => $this->projectRepository->findAll()
+            "projects" => $this->projectRepository->findAll(),
+            "comments" => $this->commentRepository->findAll(),
+            "userParticipates" => ( $user ? $this->projectUserRepository->findAll() : 0)
         ]);
     }
 
