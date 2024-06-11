@@ -153,11 +153,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $comments;
 
+    /**
+     * @var Collection<int, Reporting>
+     */
+    #[ORM\OneToMany(targetEntity: Reporting::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $reportings;
+
+    #[ORM\Column]
+    private ?bool $isBanned = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $bannedAt = null;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
         $this->projectUsers = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->reportings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -392,6 +405,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNickname(string $nickname): static
     {
         $this->nickname = $nickname;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reporting>
+     */
+    public function getReportings(): Collection
+    {
+        return $this->reportings;
+    }
+
+    public function addReporting(Reporting $reporting): static
+    {
+        if (!$this->reportings->contains($reporting)) {
+            $this->reportings->add($reporting);
+            $reporting->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReporting(Reporting $reporting): static
+    {
+        if ($this->reportings->removeElement($reporting)) {
+            // set the owning side to null (unless already changed)
+            if ($reporting->getUser() === $this) {
+                $reporting->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isBanned(): ?bool
+    {
+        return $this->isBanned;
+    }
+
+    public function setBanned(bool $isBanned): static
+    {
+        $this->isBanned = $isBanned;
+
+        return $this;
+    }
+
+    public function getBannedAt(): ?\DateTimeImmutable
+    {
+        return $this->bannedAt;
+    }
+
+    public function setBannedAt(?\DateTimeImmutable $bannedAt): static
+    {
+        $this->bannedAt = $bannedAt;
 
         return $this;
     }

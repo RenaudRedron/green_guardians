@@ -6,6 +6,14 @@
 parameters:
 
 services:
+    App\Security\AccountEnabledUserChecker:
+        tags:
+            - { name: security.user_checker.api, priority: 10 }
+            - { name: security.user_checker.main, priority: 10 }
+
+    App\Security\APIAccessAllowedUserChecker:
+        tags:
+            - { name: security.user_checker.api, priority: 5 }
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

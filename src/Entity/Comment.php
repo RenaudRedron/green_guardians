@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,6 +34,17 @@ class Comment
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    /**
+     * @var Collection<int, Reporting>
+     */
+    #[ORM\OneToMany(targetEntity: Reporting::class, mappedBy: 'comment')]
+    private Collection $reportings;
+
+    public function __construct()
+    {
+        $this->reportings = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -94,6 +107,36 @@ class Comment
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reporting>
+     */
+    public function getReportings(): Collection
+    {
+        return $this->reportings;
+    }
+
+    public function addReporting(Reporting $reporting): static
+    {
+        if (!$this->reportings->contains($reporting)) {
+            $this->reportings->add($reporting);
+            $reporting->setComment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReporting(Reporting $reporting): static
+    {
+        if ($this->reportings->removeElement($reporting)) {
+            // set the owning side to null (unless already changed)
+            if ($reporting->getComment() === $this) {
+                $reporting->setComment(null);
+            }
+        }
 
         return $this;
     }

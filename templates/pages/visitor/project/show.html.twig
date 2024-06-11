@@ -101,7 +101,7 @@
                 {% else %}
                     {% if app.user.email == project[0].user.email %}
                     {% else %}
-                        <a class="btn btn-danger m-1" href="#">Signaler le projet</a>
+                        <a class="btn btn-danger m-1" href="{{path('user_reporting_project_create', {'id':project[0].id})}}">Signaler le projet</a>
                     {% endif %}
                 {% endif %}
             </div> 
@@ -216,7 +216,16 @@
                                                     <button class="border-0 bg-transparent" onclick="return confirm('Voulez-vous vraiment supprimer le commentaire ?')" type="submit"><i class="color-danger fa-solid fa-trash fa-lg m-1" style="color: #df0707;"></i></button>
                                                 </form>                            
                                             </div>
-                                        {% endif %}      
+                                        {% else %}
+                                        <a href="{{path('user_reporting_comment_create', {'id':comment.id})}}">
+                                            <i class="fa-solid fa-flag fa-lg mt-2" style="color: #d52020;"></i>
+                                        </a>
+
+                                        {% endif %}  
+
+
+
+
                                     </div>
                                     <div class="border border-2 rounded-3 p-3">
                                         {{comment.content}}
