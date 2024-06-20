@@ -10,42 +10,45 @@
         
         <h2 class="text-center m-5">Panneau d'administration</h2>
 
-        <div class="text-center m-3">
-            Bonjour, Administrateur !
-        </div>
-
         <div class="container">
             <div class="row d-flex justify-content-center">
             
-                <div class="col-md-4 col-lg-3 bg-dark text-white text-center p-3 m-3">
-                    <h3>Utilisateurs</h3>
-                    <p class="p-3 fs-3">{{ users|length }}</p>
+                <div class="stats-admin col-md-4 col-lg-3 bg-f8f9fa border border-1 text-center p-0 m-3">
+                    <h3 class="bg-dark text-white p-2">Utilisateurs</h3>
+                    <p class="p-3 fs-3"><i class="fa-solid fa-user"></i> {{ users|length }}</p>
                 </div>
 
-                <div class="col-md-4 col-lg-3 bg-dark text-white text-center p-3 m-3">
-                    <h3>Catégories</h3>
-                    <p class="p-3 fs-3">{{ categories|length }}</p>
+                <div class="stats-admin col-md-4 col-lg-3 bg-f8f9fa border border-1 text-center p-0 m-3">
+                    <h3 class="bg-dark text-white p-2">Catégories</h3>
+                    <p class="p-3 fs-3"><i class="fa-solid fa-folder-open"></i> {{ categories|length }}</p>
                 </div>
 
-                <div class="col-md-4 col-lg-3 bg-dark text-white text-center p-3 m-3">
-                    <h3>Tags</h3>
-                    <p class="p-3 fs-3">{{ tags|length }}</p>
+                <div class="stats-admin col-md-4 col-lg-3 bg-f8f9fa border border-1 text-center p-0 m-3">
+                    <h3 class="bg-dark text-white p-2">Tags</h3>
+                    <p class="p-3 fs-3"><i class="fa-solid fa-tag"></i> {{ tags|length }}</p>
                 </div>
 
-                <div class="col-md-4 col-lg-3 bg-dark text-white text-center p-3 m-3">
-                    <h3>Projets</h3>
-                    <p class="p-3 fs-3">{{ projects|length }}</p>
+                <div class="stats-admin col-md-4 col-lg-3 bg-f8f9fa border border-1 text-center p-0 m-3">
+                    <h3 class="bg-dark text-white p-2">Projets</h3>
+                    <p class="p-3 fs-3"><i class="fa-solid fa-diagram-project"></i> {{ projects|length }}</p>
                 </div>
 
-                <div class="col-md-4 col-lg-3 bg-dark text-white text-center p-3 m-3">
-                    <h3>Commentaires</h3>
-                    <p class="p-3 fs-3">{{ comments|length }}</p>
+                <div class="stats-admin col-md-4 col-lg-3 bg-f8f9fa border border-1 text-center p-0 m-3">
+                    <h3 class="bg-dark text-white p-2">Commentaires</h3>
+                    <p class="p-3 fs-3"><i class="fa-solid fa-comments"></i> {{ comments|length }}</p>
                 </div>
 
-                <div class="col-md-4 col-lg-3 bg-dark text-white text-center p-3 m-3">
-                    <h3>Signalements</h3>
-                    <p class="p-3 fs-3">{{ reporting|length }}</p>
+                <div class="stats-admin col-md-4 col-lg-3 bg-f8f9fa border border-1 text-center p-0 m-3">
+                    <h3 class="bg-dark text-white p-2">Signalements</h3>
+                    <p class="p-3 fs-3"><i class="fa-solid fa-flag"></i> {{ reporting|length }}</p>
                 </div>
+
+                <div class="stats-admin col-md-4 col-lg-3 bg-f8f9fa border border-1 text-center p-0 m-3">
+                    <h3 class="bg-dark text-white p-2">Contacts</h3>
+                    <p class="p-3 fs-3"><i class="fa-solid fa-envelope"></i> {{ contacts|length }}</p>
+                </div>
+            
+
             
             </div>
         </div>
