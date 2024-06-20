@@ -1,0 +1,76 @@
+{% set themes = 'themes/base_visitor.html.twig' %}
+
+{% extends themes %}
+
+{% block title %}Contact{% endblock %}
+
+{% block description %}Contact de Green Guardians{% endblock %}
+
+{% block keywords %}Contact, Message{% endblock %}
+
+{% block main %}
+    <div class="p-5">
+
+        <h2 class="text-center mb-5">Nous contactez</h2>
+
+        {% include "components/_alert.html.twig" %}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 mx-auto">
+                    {{ form_start(form) }}
+
+                        {% if app.user is null %}
+
+                            <div class="row">
+                                <div class="mb-3 col-md-6">
+                                    <label for="contact_form_firstName">Nom<strong class="text-danger">*</strong></label>
+                                    <div class="text-danger">{{ form_errors(form.firstName) }}</div>
+                                    {{ form_widget(form.firstName, {"attr": {"class":"form-control"}}) }}
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="contact_form_lastName">Prénom<strong class="text-danger">*</strong></label>
+                                    <div class="text-danger">{{ form_errors(form.lastName) }}</div>
+                                    {{ form_widget(form.lastName, {"attr": {"class":"form-control"}}) }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="mb-3 col-md-6">
+                                    <label for="contact_form_email">Email<strong class="text-danger">*</strong></label>
+                                    <div class="text-danger">{{ form_errors(form.email) }}</div>
+                                    {{ form_widget(form.email, {"attr": {"class":"form-control"}}) }}
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="contact_form_phone">Téléphone</label>
+                                    <div class="text-danger">{{ form_errors(form.phone) }}</div>
+                                    {{ form_widget(form.phone, {"attr": {"class":"form-control"}}) }}
+                                </div>
+                            </div>
+
+                        {% endif %}
+                        
+                        {% if app.user %}
+                            <div class="mb-3">
+                                <label for="contact_form_phone">Téléphone</label>
+                                <div class="text-danger">{{ form_errors(form.phone) }}</div>
+                                {{ form_widget(form.phone, {"attr": {"class":"form-control"}}) }}
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-5">
+                            <label for="contact_form_content">Message<strong class="text-danger">*</strong></label>
+                            <div class="text-danger">{{ form_errors(form.content) }}</div>
+                            {{ form_widget(form.content, {"attr": {"class":"form-control"}}) }}
+                        </div>
+
+                        <div class="mb-5">
+                            <input formnovalidate class="btn btn-primary shadow w-100" type="submit" value="Envoyer">
+                        </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

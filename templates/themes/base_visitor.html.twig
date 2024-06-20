@@ -59,7 +59,7 @@
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav ms-auto">
                         <a class="nav-link mx-1 nav_a" href="{{ path('app_map') }}">Carte</a>
-                        <a class="nav-link mx-1 nav_a" href="#">Contact</a>
+                        <a class="nav-link mx-1 nav_a" href="{{ path('app_contact') }}">Contact</a>
                         {% if is_granted('ROLE_ADMIN') %}
                             <a class="nav-link mx-1 nav_a" href="{{ path('user_project_list') }}">Projets</a>
                             <a class="nav-link mx-1 nav_a" href="{{ path('user_profile') }}">Profil</a>
