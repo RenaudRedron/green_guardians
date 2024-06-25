@@ -78,53 +78,28 @@
 
         <section class="stat">
 
-            <div class="card text-center p-2">
-                <div class="text-center mb-2">
-                    <img class="w-50 m-2" src={{ asset('img/monde.png') }} alt="">
-                </div>
-                <h5 class="card-title text-uppercase text-muted mb-0">Sensibilisations</h5>
-                <span class="h2 font-weight-bold mb-1">851</span>
-            </div>
-            
-            <div class="card text-center p-2">
-                <div class="text-center mb-2">
-                    <img class="w-50 m-2" src={{ asset('img/arbre.png') }} alt="">
-                </div>
-                <h5 class="card-title text-uppercase text-muted mb-0">Reboisements</h5>
-                <span class="h2 font-weight-bold mb-1">350,897</span>
-            </div>
+            {% if categories|length == 0%}
+                <p>Aucune catégorie pour le moment.</p>
+            {% endif %}
 
-            <div class="card text-center p-2">
-                <div class="text-center mb-2">
-                    <img class="w-50 m-2" src={{ asset('img/dechet.png') }} alt="">
-                </div>
-                <h5 class="card-title text-uppercase text-muted mb-0">Nettoyages</h5>
-                <span class="h2 font-weight-bold mb-1">18,115</span>
-            </div>
+            {% for category in categories %}
+                {% set nb = 0 %}
+                {% for project in projects %}
 
-            <div class="card text-center p-2">
-                <div class="text-center mb-2">
-                    <img class="w-50 m-2" src={{ asset('img/empreinte-de-patte.png') }} alt="">
-                </div>
-                <h5 class="card-title text-uppercase text-muted mb-0">Observations</h5>
-                <span class="h2 font-weight-bold mb-1">1,998</span>
-            </div>
+                    {% if project.category.id == category.id %}
+                        {% set nb = nb + 1 %}
+                    {% endif %}
+                {% endfor %}
 
-            <div class="card text-center p-2">
-                <div class="text-center mb-2">
-                    <img class="w-50 m-2" src={{ asset('img/potager.png') }} alt="">
-                </div>
-                <h5 class="card-title text-uppercase text-muted mb-0">Jardins</h5>
-                <span class="h2 font-weight-bold mb-1">1,211</span>
-            </div>
 
-            <div class="card text-center p-2">
-                <div class="text-center mb-2">
-                    <img class="w-50 m-2" src={{ asset('img/compostable.png') }} alt="">
+                <div class="card text-center p-2">
+                    <div class="text-center mb-2">
+                        <img class="w-50 m-2" src={{ asset("img/upload/stats/"~category.imageStat) }} alt="">
+                    </div>
+                    <h5 class="card-title text-uppercase text-muted mb-0">{{category.name}}</h5>
+                    <span class="h2 font-weight-bold mb-1">{{nb}}</span>
                 </div>
-                <h5 class="card-title text-uppercase text-muted mb-0">Composteurs</h5>
-                <span class="h2 font-weight-bold mb-1">588</span>
-            </div>
+            {% endfor %}
             
         </section>
 

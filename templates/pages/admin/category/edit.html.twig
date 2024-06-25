@@ -29,12 +29,29 @@
                     {% endif %}
                 </div>
                 <div class="col-md-6 d-flex flex-column justify-content-center">
-                    <label for="admin_category_form_imageFile_image">Image</label>
+                    <label for="admin_category_form_imageFile_image">Image de marqueur</label>
                     <div class="text-danger">{{ form_errors(formCategory.imageFile) }}</div>
                     {{ form_widget(formCategory.imageFile, {"attr": {"class":"form-control mb-3"}}) }}
                 </div>
 
-            </div>          
+            </div>     
+            
+            <div class="mb-4 row">
+
+                <div class="col-md-6 text-center">
+                    {% if category.imageStat %}
+                        <img width="150" height="150" src="{{ vich_uploader_asset(category, 'imageFile2') }}" alt="{{ category.name }}">
+                    {% else %}
+                        <img width="150" height="150" src="{{ asset('img/no-image.png') }}" alt="{{ category.name }}">
+                    {% endif %}
+                </div>
+                <div class="col-md-6 d-flex flex-column justify-content-center">
+                    <label for="admin_category_form_imageFile2_image">Image de statistique</label>
+                    <div class="text-danger">{{ form_errors(formCategory.imageFile2) }}</div>
+                    {{ form_widget(formCategory.imageFile2, {"attr": {"class":"form-control mb-3"}}) }}
+                </div>
+
+            </div>       
 
             <div class="mb-3">
                 <label for="">Description</label>

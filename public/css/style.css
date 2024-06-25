@@ -356,6 +356,12 @@ footer {
     }
 }
 
+/* PREVOIR DE REFAIRE TOUT CE QUI CE TROUVE AU DESSUS */
+
+.bg_green {
+    background-color: #528750e7;
+
+}
 
 .accordion-button:active {
     background-color: #528750e7;

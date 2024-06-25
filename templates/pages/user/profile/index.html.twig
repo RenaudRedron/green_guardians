@@ -7,23 +7,89 @@
 {% block keywords %}Acceuil, Home, Welcome{% endblock %}
 
 {% block main %}
-    <div class="h-100 d-flex flex-column justify-content-center d">
+    
+    <div class="container-fluid mt-2">
+        
+        <div class="container-fluid mt-5">
+            {% include "components/_alert.html.twig" %}
+        </div>
 
-        <h2 class="text-center m-5">Profil de {{ app.user.lastName }} {{ app.user.firstName }}</h2>
+        <div class="container-fluid d-flex justify-content-center">
+            
+            <div class="text-center m-3 col-12 p-3">
+                <h3 class="text-start mb-5 text-white p-3 bg_green">Informations générales</h3>
+                <div class="d-flex justify-content-around">
+                    <p class="col-4 fs-6 font-weight-light">
+                        Pseudonyme
+                    </p>
+                    <p class="text-start col-4 fs-5 font-weight-bold">
+                        {{ app.user.nickname }}
+                    </p>
+                    <p class="col-4">
+                    </p>
+                </div>
+                <hr class="mx-auto">
+                <div class="d-flex justify-content-around">
+                    <p class="col-4 fs-6 font-weight-light">
+                        Nom
+                    </p>
+                    <p class="text-start col-4 fs-5 font-weight-bold">
+                        {{ app.user.firstName }} {{ app.user.lastName }}
+                    </p>
+                    <p class="col-4">
+                        <a href="{{path('user_profile_edit')}}">Modifier</a>
+                    </p>
+                </div>  
+                <hr class="mx-auto">
+                <div class="d-flex justify-content-around mb-5">
+                    <p class="col-4 fs-6 font-weight-light">
+                        Date de naissance
+                    </p>
+                    <p class="text-start col-4 fs-5 font-weight-bold">
+                        {{ app.user.birth|format_date()}}
+                    </p>
+                    <p class="col-4">
+                        <a href="{{path('user_profile_edit')}}">Modifier</a>
+                    </p>
+                </div>  
 
-        <div class="text-center m-3">
-            <p>
-                Pseudonyme : {{ app.user.nickname }}
-            </p>
-            <p>
-                Nom : {{ app.user.lastName }}
-            </p>
-            <p>
-                Prénom : {{ app.user.firstName }}
-            </p>
-            <p>
-                Adresse email : {{app.user.email}}
-            </p>
+                <h3 class="text-start mb-5 text-white p-3 bg_green">Coordonnées</h3>
+
+                <div class="d-flex justify-content-around">
+                    <p class="col-4 fs-6 font-weight-light">
+                        Adresse email
+                    </p>
+                    <p class="text-start col-4 fs-5 font-weight-bold">
+                        {{app.user.email}}
+                    </p>
+                    <p class="col-4">
+                    </p>
+                </div>  
+                <hr class="mx-auto">  
+                <div class="d-flex justify-content-around">
+                    <p class="col-4 fs-6 font-weight-light">
+                        Numéro de téléphone
+                    </p>
+                    <p class="text-start col-4 fs-5 font-weight-bold">
+                        {% if app.user.phone is null %}
+                            Non renseigné
+                        {% else %}
+                            {{app.user.phone}}
+                        {% endif %}
+                    </p>
+                    <p class="col-4">
+                        <a href="{{path('user_profile_edit')}}">Modifier</a>
+                    </p>
+                </div>  
+            </div>
+
+        </div>
+
+        <div class="text-center m-5">
+            <form class="d-inline" action="{{path('user_profile_delete')}}" method="post">
+                <input type="hidden" name="_csrf_token" value="{{csrf_token('delete_user_'~app.user.id)}}">
+                <input onclick="return confirm('Voulez-vous vraiment supprimer le compte ?')" type="submit" class="btn btn-danger" value="Supprimer votre compte">
+            </form>            
         </div>
 
     </div>

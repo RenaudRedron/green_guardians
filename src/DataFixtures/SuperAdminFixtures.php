@@ -42,6 +42,7 @@ class SuperAdminFixtures extends Fixture
                     ->setFirstName("Renaud")
                     ->setLastName("Redron")
                     ->setEmail("renaud.redron@gmail.com")
+                    ->setBirth(new DateTimeImmutable('09/05/1989'))
                     ->setRoles(["ROLE_SUPER_ADMIN","ROLE_ADMIN","ROLE_USER"])
                     ->setPassword($passwordHashed)
                     ->setVerified(true)

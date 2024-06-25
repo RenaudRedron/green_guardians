@@ -17,7 +17,17 @@ class CategoryFormType extends AbstractType
         $builder
             ->add('name', TextType::class )
             ->add('imageFile', VichImageType::class, [
-                'required' => false,
+                'required' => true,
+                'allow_delete' => true,
+                'delete_label' => 'Supprimer l\'image existante ?',
+                'download_label' => false,
+                'download_uri' => false,
+                'image_uri' => false,
+                'imagine_pattern' => false,
+                'asset_helper' => false,
+            ])
+            ->add('imageFile2', VichImageType::class, [
+                'required' => true,
                 'allow_delete' => true,
                 'delete_label' => 'Supprimer l\'image existante ?',
                 'download_label' => false,

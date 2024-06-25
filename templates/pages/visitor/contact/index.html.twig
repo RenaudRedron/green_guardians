@@ -50,7 +50,7 @@
 
                         {% endif %}
                         
-                        {% if app.user %}
+                        {% if app.user.phone is null %}
                             <div class="mb-3">
                                 <label for="contact_form_phone">Téléphone</label>
                                 <div class="text-danger">{{ form_errors(form.phone) }}</div>

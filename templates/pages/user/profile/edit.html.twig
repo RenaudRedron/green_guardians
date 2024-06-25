@@ -1,0 +1,57 @@
+{% extends 'themes/base_visitor.html.twig' %}
+
+{% block title %}Modification du profil{% endblock %}
+
+{% block description %}Modification du profil sur Green Guardians{% endblock %}
+
+{% block keywords %}Modification, Profil, Edition{% endblock %}
+
+{% block main %}
+    <div class="p-5">
+
+        <h2 class="text-center mb-5">Modification du profil</h2>
+
+        {% include "components/_alert.html.twig" %}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 mx-auto">
+                {{ form_start(form) }}
+
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label for="registration_form_firstName">Prénom<strong class="text-danger">*</strong></label>
+                            <div class="text-danger">{{ form_errors(form.firstName) }}</div>
+                            {{ form_widget(form.firstName, {"attr": {"class":"form-control"}})}}
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label for="registration_form_lastName">Nom<strong class="text-danger">*</strong></label>
+                            <div class="text-danger">{{ form_errors(form.lastName) }}</div>
+                            {{ form_widget(form.lastName, {"attr": {"class":"form-control"}})}}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="registration_form_birth">Date de naissance<strong class="text-danger">*</strong></label>
+                        <div class="text-danger">{{ form_errors(form.birth) }}</div>
+                        {{ form_widget(form.birth, {"attr": {"class":"form-control"}})}}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="registration_form_phone">Numéro de téléphone</label>
+                        <div class="text-danger">{{ form_errors(form.phone) }}</div>
+                        {{ form_widget(form.phone, {"attr": {"class":"form-control"}})}}
+                    </div>
+
+                    <div class="mb-3">
+                        <input formnovalidate type="submit" class="btn btn-success shadow w-100" value="Modifier">
+                    </div>  
+                    
+                {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+{% endblock %}
