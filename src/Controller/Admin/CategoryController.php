@@ -6,7 +6,9 @@ use DateTimeImmutable;
 use App\Entity\Category;
 use App\Form\CategoryFormType;
 use App\Repository\CategoryRepository;
+use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Project;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,7 +20,8 @@ class CategoryController extends AbstractController
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private CategoryRepository $categoryRepository
+        private CategoryRepository $categoryRepository,
+        private ProjectRepository $projectRepository
     ) {
     }
 
@@ -87,6 +90,17 @@ class CategoryController extends AbstractController
     #[Route('/category/{id<\d+>}/delete', name: 'admin_category_delete', methods: ["POST"])]
     public function delete(Category $category, Request $request): Response
     {
+        $projects = $this->projectRepository->findAll();
+
+        foreach ($projects as $project) {
+            if ( $project->getCategory() == $category )
+            {
+                $this->addFlash("danger", "La catégorie {$category->getName()} ne peu pas être supprimer car au moins un projet l'utilise.");
+
+                return $this->redirectToRoute("admin_category_index");
+            }
+        }
+
         if ($this->isCsrfTokenValid('delete_category_' . $category->getId(), $request->request->get('_csrf_token'))) {
             // Si le token est valide
 

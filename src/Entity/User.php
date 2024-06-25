@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -92,6 +93,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
+    #[Assert\NotBlank(message: "La date de naissance est obligatoire.")]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeImmutable $birth = null;
+
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Le numéro de téléphone ne peut pas contenir plus de {{ limit }} caractères',
+    )]
+    #[Assert\Regex(
+        "/^[0-9\s\-\(\)\+]{6,60}$/",
+        message: 'Le numéro de téléphone est incorrect.',
+    )]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $phone = null;
     // ***********************
     // Mot de passe
     // ***********************
@@ -496,6 +511,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $contact->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBirth(): ?\DateTimeImmutable
+    {
+        return $this->birth;
+    }
+
+    public function setBirth(\DateTimeImmutable $birth): static
+    {
+        $this->birth = $birth;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
 
         return $this;
     }

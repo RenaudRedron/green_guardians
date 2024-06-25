@@ -20,9 +20,15 @@
             </div>
 
             <div class="mb-3">
-                <label for="category_form_imageFile_file">Image</label>
+                <label for="category_form_imageFile_file">Image de marqueur</label>
                 <div class="text-danger">{{ form_errors(formCategory.imageFile) }}</div>
                 {{ form_widget(formCategory.imageFile, {"attr": {"class":"form-control"}}) }}
+            </div>
+
+            <div class="mb-3">
+                <label for="category_form_imageFile_file">Image de statistique</label>
+                <div class="text-danger">{{ form_errors(formCategory.imageFile2) }}</div>
+                {{ form_widget(formCategory.imageFile2, {"attr": {"class":"form-control"}}) }}
             </div>
 
             <div class="mb-3">

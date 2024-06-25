@@ -45,6 +45,19 @@ class Category
     #[ORM\Column(length: 255, unique: true, nullable: true)]
     private ?string $image = null;
 
+    #[Assert\File(
+        maxSize: '5120k',
+        extensions: ['png', 'jpg', 'jpeg', 'webp'],
+        extensionsMessage: 'Seuls les images en formats .png, .jpg, .jpeg, où .webp sont autorisés',
+    )]
+    #[Assert\NotBlank(message: "L'image de catégorie est obligatoire.")]
+    #[Vich\UploadableField(mapping: 'stats', fileNameProperty: 'imageStat')]
+    private ?File $imageFile2 = null;
+
+    #[Groups(['project_read', 'project_write'])]
+    #[ORM\Column(length: 255, unique: true, nullable: true)]
+    private ?string $imageStat = null;
+
     #[Gedmo\Slug(fields: ['name'])]
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
@@ -201,6 +214,43 @@ class Category
     public function setImage(?string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
+     */
+    public function setImageFile2(?File $imageFile2 = null): void
+    {
+        $this->imageFile2 = $imageFile2;
+
+        if (null !== $imageFile2) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function getImageFile2(): ?File
+    {
+        return $this->imageFile2;
+    }
+
+    public function getImageStat(): ?string
+    {
+        return $this->imageStat;
+    }
+
+    public function setImageStat(?string $imageStat): static
+    {
+        $this->imageStat = $imageStat;
 
         return $this;
     }
