@@ -86,6 +86,7 @@
         </div>
 
         <div class="text-center m-5">
+            <a href="{{path('app_forgot_password_request')}}" class="btn btn-primary">Réinitialiser le mot de passe</a>
             <form class="d-inline" action="{{path('user_profile_delete')}}" method="post">
                 <input type="hidden" name="_csrf_token" value="{{csrf_token('delete_user_'~app.user.id)}}">
                 <input onclick="return confirm('Voulez-vous vraiment supprimer le compte ?')" type="submit" class="btn btn-danger" value="Supprimer votre compte">

@@ -117,4 +117,34 @@ class UserController extends AbstractController
         return $this->redirectToRoute("admin_user_index");
     }
 
+    #[Route('/user/{id<\d+>}/modo', name: 'admin_user_modo', methods: ["POST"])]
+    public function modo(User $user, Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('modo_user_' . $user->getId(), $request->request->get('_csrf_token'))) {
+            // Si le token est valide
+
+            if ( $user->getRoles()[0] == 'ROLE_MODERATOR' )
+            {
+                $user->setRoles([]);
+
+                // Message flash
+                $this->addFlash("success", "Le modérateur a été rétrogradé au rôle d'utilisateur ordinaire.");
+            } else 
+            {
+                $user->setRoles(['ROLE_MODERATOR']);
+
+                // Message flash
+                $this->addFlash("success", "L'utilisateur a été promu modérateur.");
+            }
+
+            $this->entityManager->persist($user);
+            // On utilise l'entity manager pour exécuter la requête préparer
+            $this->entityManager->flush($user);
+
+        }
+
+        return $this->redirectToRoute("admin_user_index");
+
+    }
+
 }

@@ -5,6 +5,8 @@ namespace App\Controller\User;
 use App\Entity\User;
 use DateTimeImmutable;
 use App\Form\ProfileFormType;
+use App\Form\UserResetPasswordFormType;
+use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +20,7 @@ class ProfileController extends AbstractController
 
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private ContactRepository $contactRepository
     ) {
     }
 
@@ -62,7 +65,6 @@ class ProfileController extends AbstractController
             "form" => $form
         ]);
     }
-
     
     #[Route('/profile/delete', name: 'user_profile_delete')]
     public function delete(Request $request, TokenStorageInterface $tokenStorage ): Response
@@ -75,9 +77,18 @@ class ProfileController extends AbstractController
         
         $user = $this->getUser();
 
-
         if ($this->isCsrfTokenValid('delete_user_' . $user->getId(), $request->request->get('_csrf_token'))) {
             // Si le token est valide
+
+            // On séléctionne les données de la table contact qu'on souhaite passé avec un user sur null
+            $contacts = $this->contactRepository->findBy(["user" => $user]);
+            
+            foreach ($contacts as $contact) {
+                $contact->setUser(null);
+                $this->entityManager->persist($contact);
+            }
+            $this->entityManager->flush();
+
 
             // On fait appel a entityManager pour préparer la requete
             $this->entityManager->remove($user);

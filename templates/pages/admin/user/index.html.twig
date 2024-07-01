@@ -90,10 +90,20 @@
                         <td>{{user.createdAt|format_datetime()}}</td>
                         <td>{{user.updatedAt|format_datetime()}}</td>
                         <td>
-                            <form class="d-inline" action="{{path('admin_user_delete', {'id':user.id} )}}" method="post">
-                                <input type="hidden" name="_csrf_token" value="{{csrf_token('delete_user_'~user.id)}}">
-                                <input onclick="return confirm('Voulez-vous vraiment supprimer l\'utilisateur' ?')" type="submit" class="btn btn-sm btn-danger" value="Supprimer">
-                            </form>
+                            {% if user.roles[0] != "ROLE_SUPER_ADMIN" %}
+                                <form class="d-inline" action="{{path('admin_user_modo', {'id':user.id} )}}" method="post">
+                                    <input type="hidden" name="_csrf_token" value="{{csrf_token('modo_user_'~user.id)}}">
+                                    {% if user.roles[0] == "ROLE_MODERATOR" %}
+                                        <input onclick="return confirm('Voulez-vous vraiment que cet utilisateur redevienne un utilisateur ordinaire ?')" type="submit" class="btn btn-sm btn-warning" value="Modérateur">
+                                    {% else %}
+                                        <input onclick="return confirm('Voulez-vous vraiment que cet utilisateur soit modérateur ?')" type="submit" class="btn btn-sm btn-primary" value="Modérateur">
+                                    {% endif %}
+                                </form>
+                                <form class="d-inline" action="{{path('admin_user_delete', {'id':user.id} )}}" method="post">
+                                    <input type="hidden" name="_csrf_token" value="{{csrf_token('delete_user_'~user.id)}}">
+                                    <input onclick="return confirm('Voulez-vous vraiment supprimer l\'utilisateur' ?')" type="submit" class="btn btn-sm btn-danger" value="Supprimer">
+                                </form>
+                            {% endif %}
                         </td>
                     </tr> 
                 {% endfor %}
