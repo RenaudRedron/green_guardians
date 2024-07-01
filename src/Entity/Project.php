@@ -258,6 +258,14 @@ class Project
     #[ORM\OneToMany(targetEntity: Reporting::class, mappedBy: 'project')]
     private Collection $reportings;
 
+    #[ORM\Column]
+    #[Groups(['project_read', 'project_write'])]
+    private ?bool $isPublished = false;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['project_read', 'project_write'])]
+    private ?\DateTimeImmutable $publishedAt = null;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -646,6 +654,30 @@ class Project
                 $reporting->setProject(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isPublished(): ?bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setPublished(bool $isPublished): static
+    {
+        $this->isPublished = $isPublished;
+
+        return $this;
+    }
+
+    public function getPublishedAt(): ?\DateTimeImmutable
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(?\DateTimeImmutable $publishedAt): static
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }

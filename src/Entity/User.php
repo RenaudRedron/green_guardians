@@ -97,6 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $birth = null;
 
+    #[Assert\NotBlank(message: "Le numéro de téléphone est obligatoire.")]
     #[Assert\Length(
         max: 255,
         maxMessage: 'Le numéro de téléphone ne peut pas contenir plus de {{ limit }} caractères',
@@ -105,7 +106,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         "/^[0-9\s\-\(\)\+]{6,60}$/",
         message: 'Le numéro de téléphone est incorrect.',
     )]
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $phone = null;
     // ***********************
     // Mot de passe
@@ -485,6 +486,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getBirth(): ?\DateTimeImmutable
+    {
+        return $this->birth;
+    }
+
+    public function setBirth(\DateTimeImmutable $birth): static
+    {
+        $this->birth = $birth;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Contact>
      */
@@ -511,30 +536,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $contact->setUser(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getBirth(): ?\DateTimeImmutable
-    {
-        return $this->birth;
-    }
-
-    public function setBirth(\DateTimeImmutable $birth): static
-    {
-        $this->birth = $birth;
-
-        return $this;
-    }
-
-    public function getPhone(): ?string
-    {
-        return $this->phone;
-    }
-
-    public function setPhone(?string $phone): static
-    {
-        $this->phone = $phone;
 
         return $this;
     }

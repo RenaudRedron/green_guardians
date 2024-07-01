@@ -52,7 +52,7 @@ class Contact
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    
+    #[Assert\NotBlank(message: "Le numéro de téléphone est obligatoire.")]
     #[Assert\Length(
         max: 255,
         maxMessage: 'Le numéro de téléphone ne peut pas contenir plus de {{ limit }} caractères',
@@ -61,7 +61,7 @@ class Contact
         "/^[0-9\s\-\(\)\+]{6,60}$/",
         message: 'Le numéro de téléphone est incorrect.',
     )]
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $phone = null;
 
     #[Assert\NotBlank(message: "Le message est obligatoire.")]
@@ -162,4 +162,5 @@ class Contact
 
         return $this;
     }
+
 }

@@ -76,7 +76,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="registration_form_phone">Numéro de téléphone</label>
+                        <label for="registration_form_phone">Numéro de téléphone<strong class="text-danger">*</strong></label>
                         <div class="text-danger">{{ form_errors(registrationForm.phone) }}</div>
                         {{ form_widget(registrationForm.phone, {"attr": {"class":"form-control"}})}}
                     </div>

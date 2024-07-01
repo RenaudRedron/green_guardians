@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/admin')]
+#[Route('/modo')]
 class ProjectController extends AbstractController
 {
 
@@ -44,6 +44,53 @@ class ProjectController extends AbstractController
             "comments" => $this->commentRepository->findAll(),
             "userParticipates" => ( $user ? $this->projectUserRepository->findAll() : 0)
         ]);
+    }
+
+    #[Route('/project/{id<\d+>}/publish', name: 'admin_project_publish', methods: ["POST"])]
+    public function publish(Project $project, Request $request): Response
+    {
+        // Si le csrf token est valide
+        if ($this->isCsrfTokenValid('publish_project_' . $project->getId(), $request->request->get('_csrf_token'))) {
+            // Si l'article n'a pas encore été publié
+            if (false === $project->isPublished()) {
+                // On publie l'article
+                $project->setPublished(true);
+
+                // Mise à jour de la date de modification
+                $project->setUpdatedAt(new DateTimeImmutable());
+
+                // Mise à jour de la date de publication
+                $project->setPublishedAt(new DateTimeImmutable());
+
+                // Utilisation de l'entity manager pour préparer la requete
+                $this->entityManager->persist($project);
+
+                // Message flash
+                $this->addFlash("success", "Le projet a été publié.");
+            } else {
+
+                // On retire la publication de l'article
+                $project->setPublished(false);
+
+                // Mise à jour de la date de modification
+                $project->setUpdatedAt(new DateTimeImmutable());
+
+                // Mise à jour de la date de publication
+                $project->setPublishedAt(null);
+
+                // Utilisation de l'entity manager pour préparer la requete
+                $this->entityManager->persist($project);
+
+                // Message flash
+                $this->addFlash("success", "Le projet a été retiré de la liste des publications.");
+            }
+
+            // On utilise l'entity manager pour exécuter la requête préparer
+            $this->entityManager->flush($project);
+        }
+
+        // Redirection et on arrete l'execution du script avec return
+        return $this->redirectToRoute("admin_project_index");
     }
 
     #[Route('/project/{id<\d+>}/edit', name: 'admin_project_edit', methods: ["GET","POST"])]
@@ -157,4 +204,6 @@ class ProjectController extends AbstractController
 
         return $this->redirectToRoute("admin_project_index");
     }
+
+
 }

@@ -199,24 +199,27 @@
                                 Tableau de bord
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center gap-2 text-dark" href="{{path('admin_user_index')}}">
-                                <i class="fa-solid fa-user"></i>
-                                Utilisateurs
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center gap-2 text-dark" href="{{path('admin_category_index')}}">
-                                <i class="fa-solid fa-folder-open"></i>
-                                Catégories
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center gap-2 text-dark" href="{{path('admin_tag_index')}}">
-                                <i class="fa-solid fa-tag"></i>
-                                Tags
-                            </a>
-                        </li>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2 text-dark" href="{{path('admin_user_index')}}">
+                                    <i class="fa-solid fa-user"></i>
+                                    Utilisateurs
+                                </a>
+                            </li>                            
+                        
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2 text-dark" href="{{path('admin_category_index')}}">
+                                    <i class="fa-solid fa-folder-open"></i>
+                                    Catégories
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2 text-dark" href="{{path('admin_tag_index')}}">
+                                    <i class="fa-solid fa-tag"></i>
+                                    Tags
+                                </a>
+                            </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center gap-2 text-dark" href="{{path('admin_project_index')}}">
                                 <i class="fa-solid fa-diagram-project"></i>

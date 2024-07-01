@@ -19,7 +19,7 @@ class MapController extends AbstractController
     #[Route('/map', name: 'app_map')]
     public function index(SerializerInterface $serializer): Response
     {
-        $projects = $this->projectRepository->findAll();
+        $projects = $this->projectRepository->findBy(["isPublished"=>1]);
         return $this->render('pages/visitor/map/index.html.twig', [
             'markers' => $serializer->serialize($projects, 'json', ['groups' => ['project_read']]), // On passe les données sérialisé a la vue
             'projects' => $projects // On passe les données sans sérialisation

@@ -49,6 +49,7 @@
                         <th scope="col">Participants</th>
                         <th scope="col">Voir</th>
                         <th scope="col">Commentaires</th>
+                        <th scope="col">Publier</th>
                         <th scope="col">Créé le</th>
                         <th scope="col">Modifier le</th>
                         <th scope="col">Options</th>
@@ -97,6 +98,21 @@
                                 {% endif %}
                             {% endfor %}
                             {{numberComment}}
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column justify-content-center align-items-center">
+                                {% if project.isPublished %}
+                                    <span>Publier le {{project.publishedAt|format_datetime()}}</span>
+                                {% else %}
+                                    <span>Publier ?</span>
+                                {% endif %}
+                                    <form action="{{path('admin_project_publish', {'id':project.id})}}" method="post">
+                                        <div class="form-check form-switch">  
+                                            <input type="hidden" name="_csrf_token" value="{{csrf_token('publish_project_'~project.id)}}">
+                                            <input onclick="return confirm('Voulez-vous vraiment faire cet action ?')" onchange="this.form.submit()" class="form-check-input" type="checkbox" role="switch" {{ project.isPublished ? "checked" : null }} >
+                                        </div>
+                                    </form> 
+                            </div>
                         </td>
                         <td>{{project.createdAt|format_datetime()}}</td>
                         <td>{{project.updatedAt|format_datetime()}}</td>

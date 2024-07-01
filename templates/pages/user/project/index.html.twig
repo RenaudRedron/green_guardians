@@ -69,7 +69,11 @@
             {% for project in projects %}
                     
                 <div class="position-relative col-sm-11 col-md-5 col-xl-3 shadow text-center d-flex flex-column justify-content-center p-3 m-3 rounded border border-success border-opacity-25">
-
+                    {% if project.isPublished == false %}
+                        <p class="text-danger">Le projet est en cours de vérification avant sa publication.</p>
+                    {% endif %}
+                        
+                        
                     <div class="position-absolute top-0 end-0 m-1">
                         <img width="30" height="40" src="{{ vich_uploader_asset(project.category, 'imageFile') }}" alt="{{ project.category.name }}">
                     </div>
