@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use App\Entity\Contact;
 use App\Form\ContactFormType;
 use App\Form\UserContactFormType;
+use App\Repository\NetworkRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +19,8 @@ class ContactController extends AbstractController
 
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private NetworkRepository $networkRepository,
+
     ) {
     }
 
@@ -71,6 +74,7 @@ class ContactController extends AbstractController
 
         return $this->render('pages/visitor/contact/index.html.twig', [
             'form' => $form,
+            "networks" => $this->networkRepository->findAll(),
         ]);
     }
 }

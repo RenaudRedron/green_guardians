@@ -103,15 +103,127 @@
             
         </section>
 
+        <section id="about" class="container-fluid p-5">
+        
+        <div class="row">
+            <div class="col-md-8 d-flex flex-column justify-content-center align-items-center p-3 text-center">
+                <h3 class="text-green mb-3 fs-1">Notre mission</h3>
+                <p class="fs-5">
+                    Chez Green Guardians, notre mission est de promouvoir la préservation et la conservation de l'environnement en rassemblant les forces des associations, des communes et des particuliers. Nous croyons que chaque geste compte et que, ensemble, nous pouvons créer un impact positif et durable sur notre planète.
+                </p>
+            </div>
+            <div class="col-md-4 text-start">
+                <img class="w-75" src="{{ asset('img/ecology-46.png') }}" alt="Image resprésente une main avec des arbres qui pousse dedans">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 text-end">
+                <img class="w-75" src="{{ asset('img/ecology-88.png') }}" alt="Image resprésente un personnage qui plante des arbres">
+            </div>
+            <div class="col-md-8 d-flex flex-column justify-content-center align-items-center p-3 text-center">
+                <h3 class="text-green mb-3 fs-1">Pourquoi ce projet ?</h3>
+                <p class="fs-5">
+                    La protection de notre faune et de notre flore est plus urgente que jamais. Les initiatives locales jouent un rôle crucial dans la lutte contre le changement climatique et la dégradation environnementale. Green Guardians est né de la volonté de faciliter ces actions locales et de les rendre visibles et accessibles à tous. En centralisant les projets environnementaux sur une plateforme unique, nous espérons encourager la participation et la collaboration de chacun.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 d-flex flex-column justify-content-center align-items-center p-3 text-center">
+                <h3 class="text-green mb-3 fs-1">Pour qui ?</h3>
+                <p class="fs-5">
+                    Green Guardians s'adresse à toutes les personnes et organisations passionnées par la préservation de l'environnement. Les associations y trouvent un outil puissant pour mobiliser des bénévoles et promouvoir leurs initiatives. Les communes peuvent impliquer activement leurs habitants dans des projets locaux de conservation, renforçant ainsi le lien communautaire. Quant aux particuliers, ils disposent d'une plateforme pour s'engager concrètement et localement dans des actions écologiques, contribuant ainsi à la protection de leur environnement immédiat.
+                </p>
+            </div>
+            <div class="col-md-4 text-start">
+                <img class="w-75" src="{{ asset('img/mountain-1-34.png') }}" alt="Image resprésente une montagne">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 text-end">
+                <img class="w-75" src="{{ asset('img/ecology-76-7de93.png') }}" alt="Image resprésente une main avec des arbres qui pousse dedans">
+            </div>
+            <div class="col-md-8 d-flex flex-column justify-content-center align-items-center p-3 text-center">
+                <h3 class="text-green mb-3 fs-1">Comment ça marche ?</h3>
+                <p class="fs-5">
+                    Green Guardians simplifie la mise en relation et la participation à des projets environnementaux. Les utilisateurs peuvent publier leurs initiatives, qu'il s'agisse de reboisement, de nettoyage, de campagnes de sensibilisation, etc. Ces projets sont ensuite affichés sur une carte interactive, facilitant ainsi la découverte et l'accès aux actions locales. Les utilisateurs peuvent consulter cette carte pour trouver des projets proches de chez eux, y participer activement et échanger leurs idées et expériences via les commentaires. En unissant nos forces sur cette plateforme, nous rendons la préservation de la nature plus accessible et collaborative.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 d-flex flex-column justify-content-center align-items-center p-3 text-center">
+                <h3 class="text-green mb-3 fs-1">Rejoignez-nous</h3>
+                <p class="fs-5">
+                    Green Guardians est plus qu'une simple plateforme, c'est une communauté dédiée à la protection de notre planète. Ensemble, nous pouvons faire la différence. Rejoignez-nous dès aujourd'hui et devenez un gardien de la nature pour un avenir plus vert et plus durable.
+                </p>
+            </div>
+            <div class="col-md-4 text-start">
+                <img class="w-75" src="{{ asset('img/ecology-76.png') }}" alt="Image resprésente une planète avec des arbres et montagnes">
+            </div>
+        </div>
+
+        </section>
+
 
     </main>
+    <footer class="p-3">
+        <div class="container row text-center">
+            <div class="col-md-4 p-3">
+                <h3 class="text-center  mb-3">
+                    GreenGardians
+                </h3>
+                <p>
+                    "GreenGuardians" est un site qui vise à encourager et à faciliter les efforts de préservation de l'environnement.
+                </p>
+            </div>
 
-    <footer>
-        <p>
-            Copyright 2024 GreenGardians
-        </p>
+            <div class="col-md-4 p-3">
+                <h3 class="text-center  mb-3">
+                    Juridique
+                </h3>
+                <ul class="text-center list-unstyled">
+                    <li>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="bg-transparent border-0 text-white" data-bs-toggle="modal" data-bs-target="#politique">
+                            Politique de confidentialité
+                        </button>
+                    </li>
+
+                    <!-- Modal -->
+                    {% include "components/_modal_politique.html.twig" %}
+
+
+                    <li>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="bg-transparent border-0 text-white" data-bs-toggle="modal" data-bs-target="#mentions">
+                            Mentions légales
+                        </button>
+                    </li>
+
+                    <!-- Modal -->
+                    {% include "components/_modal_mentions.html.twig" %}
+                </ul>
+            </div>
+
+            <div class="col-md-4 p-3">
+                <h3 class="text-center mb-3">
+                    Suivez-Nous !
+                </h3>
+                <p>
+                    Retrouvez toutes nos actualités sur nos réseaux sociaux
+                </p>
+                <p>
+                    {% for network in networks %}
+                        <a href="{{network.URL}}" target="_bank"><img class="mx-1" width="25" height="25" src="{{ vich_uploader_asset(network, 'imageFile') }}" alt="Icone de réseau social"></a>
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
     </footer>
-    
+
     {# BOOTSTRAP JS #}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

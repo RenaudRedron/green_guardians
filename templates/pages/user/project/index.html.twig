@@ -55,12 +55,12 @@
     {% if projects|length > 0 %}
 
     <div class="d-flex justify-content-end align-items-center mx-5">
-        <a class="btn btn-primary shadow" href="{{path('user_project_create')}}"><i class="fa-solid fa-folder-plus"></i> Nouveau projet</a>
+        <a class="btn btn-success shadow" href="{{path('user_project_create')}}"><i class="fa-solid fa-folder-plus"></i> Nouveau projet</a>
     </div>
     {% elseif projects|length == 0 %}
         <div class="text-center">
             <p>Vous n'avez pas de projet pour le moment.</p>
-            <a class="btn btn-primary shadow" href="{{path('user_project_create')}}"><i class="fa-solid fa-folder-plus"></i> Nouveau projet</a>
+            <a class="btn btn-success shadow" href="{{path('user_project_create')}}"><i class="fa-solid fa-folder-plus"></i> Nouveau projet</a>
         </div>
     {% endif %}
         

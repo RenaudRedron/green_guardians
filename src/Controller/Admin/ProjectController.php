@@ -8,8 +8,9 @@ use App\Entity\Project;
 use App\Form\UserProjectFormType;
 use App\Repository\CommentRepository;
 use App\Repository\ProjectRepository;
-use App\Repository\ProjectUserRepository;
+use App\Repository\ReportingRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\ProjectUserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -23,7 +24,8 @@ class ProjectController extends AbstractController
         private EntityManagerInterface $entityManager,
         private ProjectRepository $projectRepository,
         private ProjectUserRepository $projectUserRepository,
-        private CommentRepository $commentRepository
+        private CommentRepository $commentRepository,
+        private ReportingRepository $reportingRepository,
     ) {
     }
 
@@ -192,6 +194,16 @@ class ProjectController extends AbstractController
 
         if ($this->isCsrfTokenValid('delete_project_' . $project->getId(), $request->request->get('_csrf_token'))) {
             // Si le token est valide
+
+            // On séléctionne les données de la table contact qu'on souhaite passé avec un user sur null
+            $reportings = $this->reportingRepository->findBy(["project" => $project]);
+            foreach ($reportings as $reporting) {
+
+                $this->entityManager->remove($reporting);
+
+            }                
+            
+            $this->entityManager->flush();
 
             $this->addFlash("danger", "Le projet a été supprimer");
 

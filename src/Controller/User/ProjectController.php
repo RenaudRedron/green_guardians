@@ -10,7 +10,9 @@ use App\Entity\ProjectUser;
 use App\Form\CommentFormType;
 use App\Form\UserProjectFormType;
 use App\Repository\CommentRepository;
+use App\Repository\NetworkRepository;
 use App\Repository\ProjectRepository;
+use App\Repository\ReportingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ProjectUserRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +27,9 @@ class ProjectController extends AbstractController
         private EntityManagerInterface $entityManager,
         private ProjectRepository $projectRepository,
         private ProjectUserRepository $projectUserRepository,
-        private CommentRepository $commentRepository
+        private CommentRepository $commentRepository,
+        private ReportingRepository $reportingRepository,
+        private NetworkRepository $networkRepository,
     ) {
     }
 
@@ -43,7 +47,9 @@ class ProjectController extends AbstractController
 
         return $this->render('pages/user/project/index.html.twig', [
             "projects" => $this->projectRepository->findBy(array("user" => $user->getId())), // On envoi les projets qui appartient a l'user connecté
-            "userParticipates" => ( $user ? $this->projectUserRepository->findAll() : 0)
+            "userParticipates" => ( $user ? $this->projectUserRepository->findAll() : 0),
+            "networks" => $this->networkRepository->findAll(),
+
         ]);
     }
 
@@ -138,7 +144,8 @@ class ProjectController extends AbstractController
         }
 
         return $this->render('pages/user/project/create.html.twig', [
-            "form" => $form->createView()
+            "form" => $form->createView(),
+            "networks" => $this->networkRepository->findAll(),
         ]);
     }
 
@@ -236,7 +243,8 @@ class ProjectController extends AbstractController
 
         return $this->render('pages/user/project/edit.html.twig', [
             "form" => $form->createView(),
-            "project" => $project
+            "project" => $project,
+            "networks" => $this->networkRepository->findAll(),
         ]);
     }
 
@@ -253,6 +261,16 @@ class ProjectController extends AbstractController
             // Si le token est valide
 
             $this->addFlash("danger", "Le projet a été supprimer");
+
+            // On séléctionne les données de la table contact qu'on souhaite passé avec un user sur null
+            $reportings = $this->reportingRepository->findBy(["project" => $project]);
+            foreach ($reportings as $reporting) {
+
+                $this->entityManager->remove($reporting);
+
+            }                
+            
+            $this->entityManager->flush();
 
             // On fait appel a entityManager pour préparer la requete
             $this->entityManager->remove($project);
@@ -328,7 +346,9 @@ class ProjectController extends AbstractController
             "form" => $form,
             "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
             "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
-            "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+            "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
+            "networks" => $this->networkRepository->findAll(),
+
         ]);
     }
 
@@ -454,7 +474,8 @@ class ProjectController extends AbstractController
                 "id" => $project->getId(),
                 "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
                 "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
-                "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+                "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
+                "networks" => $this->networkRepository->findAll(),
             ]);
         }
         elseif ( $comment->getProject()->getId() != $project->getId() || $this->getUser() != $comment->getUser()) {
@@ -462,7 +483,9 @@ class ProjectController extends AbstractController
                 "id" => $project->getId(),
                 "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
                 "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
-                "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+                "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
+                "networks" => $this->networkRepository->findAll(),
+
             ]);
         } else {}
 
@@ -489,14 +512,16 @@ class ProjectController extends AbstractController
                     "id" => $project->getId(),
                     "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
                     "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
-                    "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+                    "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
+                    "networks" => $this->networkRepository->findAll(),
             ]);
 
         }
 
         return $this->render('pages/user/comment/edit.html.twig', [
             "form" => $form->createView(),
-            "comment" => $comment
+            "comment" => $comment,
+            "networks" => $this->networkRepository->findAll(),
         ]);
     }
 
@@ -528,7 +553,8 @@ class ProjectController extends AbstractController
                 "id" => $project->getId(),
                 "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
                 "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
-                "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+                "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
+                "networks" => $this->networkRepository->findAll(),
             ]);
         }
         elseif ( $comment->getProject()->getId() != $project->getId() || $this->getUser() != $comment->getUser()) {
@@ -536,7 +562,8 @@ class ProjectController extends AbstractController
                 "id" => $project->getId(),
                 "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
                 "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
-                "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+                "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
+                "networks" => $this->networkRepository->findAll(),
             ]);
         } else {}
 
@@ -545,6 +572,17 @@ class ProjectController extends AbstractController
             // Si le token est valide
 
             $this->addFlash("danger", "Le commentaire a été supprimer");
+
+            // On séléctionne les données de la table contact qu'on souhaite passé avec un user sur null
+            $reportings = $this->reportingRepository->findBy(["comment" => $comment]);
+            foreach ($reportings as $reporting) {
+
+                $this->entityManager->remove($reporting);
+
+            }                
+            
+            $this->entityManager->flush();
+
 
             // On fait appel a entityManager pour préparer la requete
             $this->entityManager->remove($comment);
@@ -557,7 +595,8 @@ class ProjectController extends AbstractController
             "id" => $project->getId(),
             "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
             "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
-            "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
+            "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
+            "networks" => $this->networkRepository->findAll(),
         ]);
     }
 

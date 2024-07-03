@@ -5,8 +5,9 @@ namespace App\Controller\User;
 use App\Entity\User;
 use DateTimeImmutable;
 use App\Form\ProfileFormType;
-use App\Form\UserResetPasswordFormType;
 use App\Repository\ContactRepository;
+use App\Repository\NetworkRepository;
+use App\Form\UserResetPasswordFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +21,9 @@ class ProfileController extends AbstractController
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private ContactRepository $contactRepository
+        private ContactRepository $contactRepository,
+        private NetworkRepository $networkRepository,
+
     ) {
     }
 
@@ -31,7 +34,9 @@ class ProfileController extends AbstractController
         $user = $this->getUser();
 
         return $this->render('pages/user/profile/index.html.twig', [
-            "user" => $user
+            "user" => $user,
+            "networks" => $this->networkRepository->findAll(),
+
         ]);
     }
 
@@ -62,7 +67,9 @@ class ProfileController extends AbstractController
         }
 
         return $this->render('pages/user/profile/edit.html.twig', [
-            "form" => $form
+            "form" => $form,
+            "networks" => $this->networkRepository->findAll(),
+
         ]);
     }
     

@@ -85,10 +85,59 @@
 
     </main>
 
-    <footer>
-        <p>
-            Copyright 2024 GreenGardians
-        </p>
+    <footer class="p-3">
+        <div class="container row text-center">
+            <div class="col-md-4 p-3">
+                <h3 class="text-center  mb-3">
+                    GreenGardians
+                </h3>
+                <p>
+                    "GreenGuardians" est un site qui vise à encourager et à faciliter les efforts de préservation de l'environnement.
+                </p>
+            </div>
+
+            <div class="col-md-4 p-3">
+                <h3 class="text-center  mb-3">
+                    Juridique
+                </h3>
+                <ul class="text-center list-unstyled">
+                    <li>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="bg-transparent border-0 text-white" data-bs-toggle="modal" data-bs-target="#politique">
+                            Politique de confidentialité
+                        </button>
+                    </li>
+
+                    <!-- Modal -->
+                    {% include "components/_modal_politique.html.twig" %}
+
+
+                    <li>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="bg-transparent border-0 text-white" data-bs-toggle="modal" data-bs-target="#mentions">
+                            Mentions légales
+                        </button>
+                    </li>
+
+                    <!-- Modal -->
+                    {% include "components/_modal_mentions.html.twig" %}
+                </ul>
+            </div>
+
+            <div class="col-md-4 p-3">
+                <h3 class="text-center mb-3">
+                    Suivez-Nous !
+                </h3>
+                <p>
+                    Retrouvez toutes nos actualités sur nos réseaux sociaux
+                </p>
+                <p>
+                    {% for network in networks %}
+                        <a href="{{network.URL}}" target="_bank"><img class="mx-1" width="25" height="25" src="{{ vich_uploader_asset(network, 'imageFile') }}" alt="Icone de réseau social"></a>
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
     </footer>
     
 

@@ -8,6 +8,7 @@ use App\Entity\Comment;
 use App\Entity\Project;
 use App\Entity\Reporting;
 use App\Form\UserReportingFormType;
+use App\Repository\NetworkRepository;
 use App\Repository\ReportingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,8 @@ class ReportingController extends AbstractController
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private ReportingRepository $reportingRepository
+        private ReportingRepository $reportingRepository,
+        private NetworkRepository $networkRepository,
     ) {
     }
 
@@ -41,7 +43,7 @@ class ReportingController extends AbstractController
         if ( count($this->reportingRepository->findBy(array("user" => $user,"project" => $project->getId()))) > 0 )
         {
             $this->addFlash("warning", "Vous avez déjà signalé le projet.");
-            return $this->redirectToRoute('user_project_show', ['id' => $project->getId()]);
+            return $this->redirectToRoute('user_project_show', ['id' => $project->getId(),"networks" => $this->networkRepository->findAll()]);
         }
 
         // On instancie un nouvelle objet reporting
@@ -70,11 +72,13 @@ class ReportingController extends AbstractController
 
             $this->addFlash("success", "Le projet a été signaler avec succès.");
 
-            return $this->redirectToRoute('user_project_show', ['id' => $reporting->getProject()->getId()]);
+            return $this->redirectToRoute('user_project_show', ['id' => $reporting->getProject()->getId(),"networks" => $this->networkRepository->findAll()]);
         }
 
         return $this->render('pages/user/reporting/project/create.html.twig', [
             'form' => $form,
+            "networks" => $this->networkRepository->findAll(),
+
         ]);
     }
 
@@ -94,7 +98,8 @@ class ReportingController extends AbstractController
         if ( count($this->reportingRepository->findBy(array("user" => $user, "comment" => $comment->getId()))) > 0 )
         {
             $this->addFlash("warning", "Vous avez déjà signalé le commentaire.");
-            return $this->redirectToRoute('user_project_show', ['id' => $comment->getProject()->getId()]);
+            return $this->redirectToRoute('user_project_show', ['id' => $comment->getProject()->getId(), "networks" => $this->networkRepository->findAll(),
+        ]);
         }
 
         // On instancie un nouvelle objet reporting
@@ -131,11 +136,13 @@ class ReportingController extends AbstractController
 
             $this->addFlash("success", "Le commentaire a été signaler avec succès.");
 
-            return $this->redirectToRoute('user_project_show', ['id' => $reporting->getComment()->getProject()->getId()]);
+            return $this->redirectToRoute('user_project_show', ['id' => $reporting->getComment()->getProject()->getId(), "networks" => $this->networkRepository->findAll()]);
         }
 
         return $this->render('pages/user/reporting/comment/create.html.twig', [
             'form' => $form,
+            "networks" => $this->networkRepository->findAll(),
+
         ]);
     }
 }

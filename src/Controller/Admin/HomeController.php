@@ -6,6 +6,7 @@ use App\Repository\TagRepository;
 use App\Repository\UserRepository;
 use App\Repository\CommentRepository;
 use App\Repository\ContactRepository;
+use App\Repository\NetworkRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\ReportingRepository;
@@ -25,6 +26,7 @@ class HomeController extends AbstractController
         private CommentRepository $commentRepository,
         private ReportingRepository $reportingRepository,
         private ContactRepository $contactRepository,
+        private NetworkRepository $networkRepository,
     ) {
     }
 
@@ -39,6 +41,7 @@ class HomeController extends AbstractController
             "comments" => $this->commentRepository->findAll(),
             "reporting" => $this->reportingRepository->findAll(),
             "contacts" => $this->contactRepository->findAll(),
+            "networks" => $this->networkRepository->findAll(),
         ]);
     }
 }
