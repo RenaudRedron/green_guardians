@@ -1,0 +1,48 @@
+{% extends 'themes/base_admin.html.twig' %}
+
+{% block title %}Modification d'un réseau social{% endblock %}
+
+{% block description %}Modification d'un réseau social de Green Guardians{% endblock %}
+
+{% block keywords %}Admin, Administration, Réseau, Social, Network{% endblock %}
+
+{% block main %}
+
+    <h2 class="text-center m-5">Modification d'un réseau</h2>
+    <div class="container">
+
+        {{ form_start(form) }}
+
+            <div class="mb-3">
+                <label for="admin_network_form_url">URL<strong class="text-danger">*</strong></label>
+                <div class="text-danger">{{ form_errors(form.url) }}</div>
+                {{ form_widget(form.url, {"attr": {"class":"form-control", "autofocus":"autofocus"}})}}
+            </div>
+
+            <div class="mb-4 row">
+
+                <div class="col-md-6 text-center">
+                    {% if network.image %}
+                        <img width="35" height="35" src="{{ vich_uploader_asset(network, 'imageFile') }}" alt="Icone de réseau social">
+                    {% else %}
+                        <img width="35" height="35" src="{{ asset('img/no-image.png') }}" alt="{{ network.name }}">
+                    {% endif %}
+                </div>
+                <div class="col-md-6 d-flex flex-column justify-content-center">
+                    <label for="admin_network_form_imageFile_image">Image de statistique</label>
+                    <div class="text-danger">{{ form_errors(form.imageFile) }}</div>
+                    {{ form_widget(form.imageFile, {"attr": {"class":"form-control mb-3"}}) }}
+                </div>
+
+            </div>      
+
+            <div class="mb-3">
+                <input formnovalidate type="submit" class="btn btn-success shadow w-100" value="Modifier le réseau">
+            </div> 
+
+        {{ form_end(form) }}
+
+    </div>
+
+
+{% endblock %} 

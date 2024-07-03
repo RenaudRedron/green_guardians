@@ -3,22 +3,23 @@
 namespace App\Controller\Visitor;
 
 use App\Entity\User;
-use App\Form\ChangePasswordFormType;
-use App\Form\ResetPasswordRequestFormType;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Form\ChangePasswordFormType;
+use App\Repository\NetworkRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Form\ResetPasswordRequestFormType;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
-use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
 #[Route('/reset-password')]
 class ResetPasswordController extends AbstractController
@@ -27,7 +28,9 @@ class ResetPasswordController extends AbstractController
 
     public function __construct(
         private ResetPasswordHelperInterface $resetPasswordHelper,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private NetworkRepository $networkRepository,
+
     ) {
     }
 
@@ -50,6 +53,8 @@ class ResetPasswordController extends AbstractController
 
         return $this->render('pages/visitor/security/reset_password/request.html.twig', [
             'requestForm' => $form,
+            "networks" => $this->networkRepository->findAll(),
+
         ]);
     }
 
@@ -67,6 +72,8 @@ class ResetPasswordController extends AbstractController
 
         return $this->render('pages/visitor/security/reset_password/check_email.html.twig', [
             'resetToken' => $resetToken,
+            "networks" => $this->networkRepository->findAll(),
+
         ]);
     }
 
@@ -127,6 +134,8 @@ class ResetPasswordController extends AbstractController
 
         return $this->render('pages/visitor/security/reset_password/reset.html.twig', [
             'resetForm' => $form,
+            "networks" => $this->networkRepository->findAll(),
+
         ]);
     }
 

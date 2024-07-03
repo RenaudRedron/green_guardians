@@ -16,7 +16,7 @@ body {
     grid-template-rows: auto 1fr auto;
 }
 
-.nav_text_logo, footer p {
+.nav_text_logo, footer h3, #about h3 {
     font-family: "Pacifico", cursive;
 }
 
@@ -340,8 +340,6 @@ footer {
     background-color: #528750;
     border-top: #70ae6d solid 1px;
     color:white;
-    font-size: 22px;
-    height: 150px;
     justify-content: center;
     align-items: center;
 }
@@ -360,6 +358,11 @@ footer {
 
 .bg_green {
     background-color: #528750e7;
+
+}
+
+.text-green {
+    color: #528750e7;
 
 }
 
