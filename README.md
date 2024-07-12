@@ -1,4 +1,5 @@
-#﻿ Notre mission
+#﻿Notre mission
+=======
 Chez Green Guardians, notre mission est de promouvoir la préservation et la conservation de l'environnement en rassemblant les forces des associations, des communes et des particuliers. Nous croyons que chaque geste compte et que, ensemble, nous pouvons créer un impact positif et durable sur notre planète.
 
 ﻿#﻿ Pourquoi ce projet ?
