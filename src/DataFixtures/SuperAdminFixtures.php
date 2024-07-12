@@ -38,11 +38,11 @@ class SuperAdminFixtures extends Fixture
         $passwordHashed = $this->hasher->hashPassword($superAdmin, "azerty12345.A");
 
         $superAdmin 
-                    ->setNickname("Admin")
-                    ->setFirstName("Renaud")
-                    ->setLastName("Redron")
-                    ->setEmail("renaud.redron@gmail.com")
-                    ->setPhone("0603332923")
+                    ->setNickname("Administrateur")
+                    ->setFirstName("Admin")
+                    ->setLastName("Admin")
+                    ->setEmail("contact@green-guardians.fr")
+                    ->setPhone("0123456789")
                     ->setBirth(new DateTimeImmutable('09/05/1989'))
                     ->setRoles(["ROLE_SUPER_ADMIN","ROLE_ADMIN","ROLE_USER"])
                     ->setPassword($passwordHashed)
