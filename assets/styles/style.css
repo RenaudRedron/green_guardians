@@ -3,6 +3,33 @@ a {
     text-decoration-line: none;
 }
 
+* {
+    font-family: "Poppins", sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.nav_text_logo, footer h3, #about h3 {
+    font-family: "Pacifico", cursive;
+}
+
+.bg_green {
+    background-color: #528750e7;
+
+}
+
+.text-green {
+    color: #528750e7;
+
+}
+
 /* ---------------------------------------------------------------- */
 /* -------------------------- NAV --------------------------------- */
 /* ---------------------------------------------------------------- */
@@ -11,46 +38,63 @@ a {
     display: flex;
     justify-content: space-between;
     height: 70px;
-    background-color: #528750;
     align-items: center;
 }
 
 .nav_bg_green {
-    background-color: #528750;
+    background-color: #528750e7;
 
 }
 
+@media only screen and (max-width: 991px) {
+    .navbar-collapse {
+        margin-top:10px
+    }
+    .navbar-collapse-home {
+        background-color: #528750;
+        margin-top:10px;
+        width: 100%;
+    }
+}
+
 .nav_img_logo {
-    position: absolute;
     height: 67px;
-    left: 10px;
-    top: 0
+    left: 25px;
 }
 
 .nav_text_logo {
     display: flex;
     color: white;
-    background-color: #70ae6d;
-    height: 50px;
-    border-radius: 30px;
+    height: 70px;
     align-items: center;
-    margin-left: 35px;
-    padding-left: 30px;
-    padding-right: 20px;
-    font-size: 30px;
-    min-width: 220px;
+    margin-left: 45px;
+    padding-left: 50px;
+    font-size: 25px;
+
 }
 
+@media only screen and (max-width: 360px) {
+    .nav_text_logo {
+        font-size: 20px;
+        padding-left: 30px;
+    }
+
+    .nav_img_logo {
+        height: 57px;
+        left: 15px;
+    }
+}
 
 .nav_a {
     color: white;
     font-size: 18px;
-    display: block;
-    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     padding: 10px;
     border-radius: 30px;
-    margin: 10px;
+    margin: 10px 20px;
 }
 
 .nav_a:hover {
@@ -58,15 +102,31 @@ a {
     color: white;
 }
 
+.nav_a:active {
+    color: white;
+}
+
+.nav_a:visited {
+    color: white;
+}
+
+@media only screen and (max-width: 700px) {
+    .nav_a:hover {
+        background-color: transparent;
+    }
+}
+
+
 .nav_link_connexion {
     color: #70ae6d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: white;
-    display: block;
-    width: 150px;
     text-align: center;
     padding: 10px;
     border-radius: 30px;
-    margin: 10px;
+    margin: 10px 20px;
 }
 
 .nav_link_connexion:hover {
@@ -86,12 +146,147 @@ a {
     box-shadow:none
 }
 
+.title-top {
+    margin-top: 55px;
+}
+
+
 /* ---------------------------------------------------------------- */
-/* -------------------------- MAIN -------------------------------- */
+/* -------------------------- HEADER ------------------------------- */
+/* ---------------------------------------------------------------- */
+
+.header {
+    background-image: url("../img/header.jpg"); /* The image used */
+    background-color: #cccccc; /* Used if the image is unavailable */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    flex-wrap: wrap;
+    min-height: 700px;
+    border-bottom: #528750 solid 1px;
+
+}
+
+#text-header {
+    font-size: 20px;
+}
+
+@media screen and (max-width: 700px){
+    #text-header {
+        font-size: 16px;
+    }
+}
+
+/* ---------------------------------------------------------------- */
+/* -------------------------- ABOUT ------------------------------- */
+/* ---------------------------------------------------------------- */
+
+.about {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center; 
+    width: 100%;
+    border-radius: 10px;
+    padding: 40px;
+}
+
+.about img {
+    width: 20%;
+    min-width: 400px;
+    margin: 20px;
+    border-radius: 20px;
+}
+
+.about div {
+    width: 70%;
+    margin: 20px;
+    min-width: 400px;
+}
+
+.about div h2 {
+    font-size: 30px;
+    color: #70ae6d;
+    padding: 10px;
+    text-align: center;
+}
+
+.about div p {
+    text-align: justify;
+    line-height: 1.2rem;
+    color: white;
+    margin: 10px;
+}
+
+.bg-about{
+    background-color: transparent;
+}
+
+.bg-about:hover{
+    background-color: #528750;
+}
+/* ---------------------------------------------------------------- */
+/* -------------------------- STATISTIQUES ------------------------ */
+/* ---------------------------------------------------------------- */
+
+.stat {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center; 
+    padding: 40px;
+}
+
+.card {
+    height: 270px;
+    width: 270px;
+
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 20px;
+    border-top: #528750 solid 2px;
+    border-bottom: #528750 solid 2px;
+    margin: 10px;
+}
+
+.card:hover {
+    box-shadow: 0 12px 12px 0 rgba(0,0,0,0.5);
+    transition: 0.3s;
+}
+
+.card img {
+    width: 100%;
+    max-height: 130px;
+    min-height: 130px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.card div {
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+}
+
+/* ---------------------------------------------------------------- */
+/* -------------------------- FOOTER ------------------------------ */
+/* ---------------------------------------------------------------- */
+
+footer {
+    background-color: #528750;
+    border-top: #70ae6d solid 1px;
+    color:white;
+}
+
+/* ---------------------------------------------------------------- */
+/* -------------------------- MAP ------------------------------ */
 /* ---------------------------------------------------------------- */
 
 #map {
-    height: 600px;
+    height: 750px;
     border-bottom: #528750 solid 1px;
 }
 
@@ -172,113 +367,63 @@ main hr {
 }
 
 /* ---------------------------------------------------------------- */
-/* -------------------------- ABOUT ------------------------------- */
+/* -------------------------- PAGE SHOW PROJECT-------------------- */
 /* ---------------------------------------------------------------- */
 
-.header {
-    background-image: url("../img/header.jpg"); /* The image used */
-    background-color: #cccccc; /* Used if the image is unavailable */
-    min-height: 500px; /* You must set a specified height */
-    background-position: center; /* Center the image */
-    background-repeat: no-repeat; /* Do not repeat the image */
-    background-size: cover; /* Resize the background image to cover the entire container */
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    flex-wrap: wrap;
-
-}
-
-.about {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center; 
-    background-color: rgba(255, 255, 255, 0.2);
-    width: 90%;
-    border-radius: 10px;
-    padding: 0px 40px;
-    margin:20px
-}
-
-.about img {
-    width: 20%;
-    min-width: 400px;
-    margin: 20px;
-    border-radius: 20px;
-}
-
-.about div {
-    width: 70%;
-    margin: 20px;
-    min-width: 400px;
-}
-
-.about div h2 {
-    font-size: 30px;
-    color: #70ae6d;
-    padding: 10px;
-    text-align: center;
-}
-
-.about div p {
-    text-align: justify;
-    line-height: 1.2rem;
+.accordion-button:active {
+    background-color: #528750e7;
     color: white;
-    margin: 10px;
+}
+
+.accordion-button {
+    background-color: #528750e7;
+    color: white;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(0,0,0,.125);
+    background-color: #528750e7;
+
+}
+
+.accordion-button-active, .collapsed {
+    background-color: #528750e7;
+    color: white;
+}
+
+.accordion-button:not(.collapsed){
+    background-color: #528750e7;
+    color: white;
 }
 
 /* ---------------------------------------------------------------- */
-/* -------------------------- STATISTIQUES ------------------------ */
+/* -----------Personnalisation de la pagination-------------------- */
 /* ---------------------------------------------------------------- */
 
-.stat {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center; 
-    padding: 40px;
+
+.pagination {
+    --bs-pagination-active-bg: #528750e7;
+    --bs-pagination-active-border-color: #528750e7;
 }
 
-.card {
-    width: 180px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    border-radius: 20px;
-    border: #5287507a solid 1px;
-    margin: 10px;
+.pagination > li > a
+{
+    background-color: white;
+    color: black;
 }
 
-.card:hover {
-    box-shadow: 0 12px 12px 0 rgba(0,0,0,0.5);
-    transition: 0.3s;
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    background-color: #528750e7;
+    color: white;
 }
 
-.card img {
-    width: 100%;
-    max-height: 130px;
-    min-height: 130px;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-}
-
-.card div {
-    width: 100%;
-    padding: 10px 0;
-    text-align: center;
-}
-
-/* ---------------------------------------------------------------- */
-/* -------------------------- FOOTER ------------------------------ */
-/* ---------------------------------------------------------------- */
-
-footer {
-    display: flex;
-    background-color: #528750;
-    border-top: #70ae6d solid 1px;
-    color:white;
-    font-size: 22px;
-    height: 150px;
-    justify-content: center;
-    align-items: center;
+.pagination > .active 
+{
+    color: white;
+    background-color: #528750e7 !Important; 
 }

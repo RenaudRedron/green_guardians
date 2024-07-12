@@ -2,11 +2,15 @@
 
 {% extends themes %}
 
-{% block title %}Carte des projects{% endblock %}
+{% block title %}Carte des projets{% endblock %}
 
 {% block description %}Carte interactif des projets de Green Guardians{% endblock %}
 
 {% block keywords %}Map, Carte, Carte interactif, Projet{% endblock %}
+
+{% block jQuery %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
 
 {# GOOGLE MAPS #}
 {% block googleMaps %}
@@ -16,63 +20,69 @@
             ({ key: "AIzaSyBJDfXTzLLSaY29DCOm88U9geoDFCqAUcw", v: "beta" });</script>    
 {% endblock %}
 
+{# rel links for pagination #}
 {% block main %}
+{{ knp_pagination_rel_links(pagination) }}
+
     {# Div d'affichage de la carte google #}
     {# Utilisation de data-projects pour stocké et pour après passé les données serialisés à map.js  #}
     <div id="map" class="w-100" data-projects="{{ markers }}"></div>
 
-    <section class="main_article">
+    <section class="container-fluid">
     
-        {% if projects|length == 0 %}
+        {% if pagination|length == 0 %}
             <div class="text-center">
                 <p>Aucun projet pour le moment.</p>
             </div>
         {% endif %}
-        {% for project in projects %}
-            
-            <article class="main_article_container">
-                <a href="{{path('user_project_show',{'id':project.id})}}">
-                    <div class="main_article_flex_item_left">
-                        {% if project.image %}
-                            <img src="{{ vich_uploader_asset(project, 'imageFile') }}" alt="{{ project.title }}">
-                        {% else %}
-                            <img height="200" width="200" src="{{ asset('img/no-image.png') }}" alt="{{ project.title }}">
-                        {% endif %}
-                    </div>
-                </a>
-                <div class="main_article_item_right_flex_container">
-                    <div class="main_article_flex_container">
-                        <a href="{{path('user_project_show',{'id':project.id})}}"><h2 class='main_article_flex_content_h2'>{{project.title}}</h2></a>
-                    </div>
+        {% for project in pagination %}
+                            
+        <article class="container-fluid row mt-5">
+            <div class="col-lg-3 col-md-6 text-center p-1">
+                {% if project.image %}
+                    <a href="{{path('user_project_show',{'id':project.id})}}"><img height="180" width="230" class="p-2" src="{{ vich_uploader_asset(project, 'imageFile') }}" alt="{{ project.title }}"></a>
+                {% else %}
+                    <a href="{{path('user_project_show',{'id':project.id})}}"><img height="200" width="200" class="p-2" src="{{ asset('img/no-image.png') }}" alt="Projet {{ project.title }} image par défaut"></a>
+                {% endif %}
+            </div>
 
-                    <div class='main_article_item_right_flex_content_div'>
-                        <p>{{project.address}}</p>
+            <div class="col-lg-9 col-md-6 d-flex flex-column justify-content-start">
+                <a href="{{path('user_project_show',{'id':project.id})}}"><h2 class="main_article_flex_content_h2">{{project.title}}</h2></a>
 
-                        {% if project.startDate|date('Y-m-d') > "now"|date('Y-m-d') %}
+                <div class="main_article_item_right_flex_content_div">
+                    <p>{{project.address}}</p>
+
+                    {% if project.startDate|date('Y-m-d') > "now"|date('Y-m-d') %}
                         <p>Projet à venir ({{project.startDate|format_date()}})</p>
-                        {% elseif project.endDate|date('Y-m-d') < "now"|date('Y-m-d') %}
+                    {% elseif project.endDate|date('Y-m-d') < "now"|date('Y-m-d') %}
                         <p>Le projet est terminé</p>
-                        {% else %}
+                    {% else %}
                         <p>Le projet a commencé le {{project.startDate|format_date()}} {{ project.endDate ? " et finira le "~project.endDate|format_date() : ""}}</p>
-                        {% endif %}
-
-                    </div>
-                    <p class='main_article_item_right_flex_content_p'>{{project.description}}
-                    </p>
-                    <div class="rows">
-                        {% if project.tags is empty %}
-                        {% else %}
-                            {% for tag in project.tags %}
-                                <span class="badge text-bg-success"> {{tag.name}}</span> 
-                            {% endfor %}
-                        {% endif %}
-                    </div>
+                    {% endif %}
                 </div>
-            </article>
+
+                <p class="main_article_item_right_flex_content_p">{{project.description}}</p>
+
+                <div class="rows">
+                    {% if project.tags is empty %}
+                    {% else %}
+                        {% for tag in project.tags %}
+                            <span class="badge text-bg-success">{{tag.name}}</span> 
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </article>
+
 
             <hr>
 
         {% endfor %}
+
+        {# display navigation #}
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
 
     </section>
     

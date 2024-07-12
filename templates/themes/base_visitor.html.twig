@@ -48,9 +48,9 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg nav_bg_green w-100">
+        <nav class="navbar navbar-expand-lg nav_bg_green w-100 shadow">
             <div class="container-fluid">
-                <a class="nav_text_logo" href="{{ path('app_home') }}"><img class="nav_img_logo position-absolute top-2" src="{{ asset('img/logo.png') }}" alt="Icon tree"> Green Guardians</a>
+                <a class="nav_text_logo fontPacifico" href="{{ path('app_home') }}"><img class="nav_img_logo position-absolute top-2" src="{{ asset('img/logo.png') }}" alt="Logo du site"> Green Guardians</a>
                 <button class="navbar-toggler " type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -85,19 +85,20 @@
 
     </main>
 
-    <footer class="p-3">
+
+    <footer class="container-fluid d-flex justify-content-center p-3">
         <div class="container row text-center">
             <div class="col-md-4 p-3">
-                <h3 class="text-center  mb-3">
-                    GreenGardians
+                <h3 class="text-center mb-3 fontPacifico">
+                    Green Guardians
                 </h3>
                 <p>
-                    "GreenGuardians" est un site qui vise à encourager et à faciliter les efforts de préservation de l'environnement.
+                    Green Guardians est une plateforme qui vise à encourager et à faciliter les efforts de préservation de l'environnement.
                 </p>
             </div>
 
             <div class="col-md-4 p-3">
-                <h3 class="text-center  mb-3">
+                <h3 class="text-center mb-3 fontPacifico">
                     Juridique
                 </h3>
                 <ul class="text-center list-unstyled">
@@ -110,7 +111,6 @@
 
                     <!-- Modal -->
                     {% include "components/_modal_politique.html.twig" %}
-
 
                     <li>
                         <!-- Button trigger modal -->
@@ -125,7 +125,7 @@
             </div>
 
             <div class="col-md-4 p-3">
-                <h3 class="text-center mb-3">
+                <h3 class="text-center mb-3 fontPacifico">
                     Suivez-Nous !
                 </h3>
                 <p>
@@ -133,13 +133,16 @@
                 </p>
                 <p>
                     {% for network in networks %}
-                        <a href="{{network.URL}}" target="_bank"><img class="mx-1" width="25" height="25" src="{{ vich_uploader_asset(network, 'imageFile') }}" alt="Icone de réseau social"></a>
+                        <a href="{{network.URL}}" target="_blank"><img class="mx-1" width="25" height="25" src="{{ vich_uploader_asset(network, 'imageFile') }}" alt="Icone de réseau social"></a>
                     {% endfor %}
                 </p>
             </div>
         </div>
     </footer>
-    
+
+    {% include "components/_modal_politique.html.twig" %}
+
+    {% include "components/_modal_mentions.html.twig" %}
 
 
     {# BOOTSTRAP JS #}

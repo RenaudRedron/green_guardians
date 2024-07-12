@@ -11,13 +11,18 @@ html, body {
     height: 100%;
 }
 
-body {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
+.fontPacifico {
+    font-family: "Pacifico", cursive;
 }
 
-.nav_text_logo, footer h3, #about h3 {
-    font-family: "Pacifico", cursive;
+.bg_green {
+    background-color: #528750e7;
+
+}
+
+.text-green {
+    color: #528750e7;
+
 }
 
 /* ---------------------------------------------------------------- */
@@ -140,93 +145,9 @@ body {
     margin-top: 55px;
 }
 
-/* ---------------------------------------------------------------- */
-/* -------------------------- MAIN -------------------------------- */
-/* ---------------------------------------------------------------- */
-
-#map {
-    height: 750px;
-    border-bottom: #528750 solid 1px;
-}
-
-.main_article {
-    display: flex;
-    flex-direction: column;
-    padding: 50px;
-    justify-content: center;
-    align-items: center;
-}
-
-.main_article_container {
-    display: flex;
-    width: 90%;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-}
-
-.main_article_flex_item_left {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    width: 30%;
-    min-width: 350px;
-    max-width: 350px;
-
-}
-
-.main_article_flex_item_left img {
-    width: 80%;
-    margin: 20px;
-}
-
-.main_article_item_right_flex_container {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    width: 70%;
-    min-width: 350px;
-
-}
-
-.main_article_flex_container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-}
-
-.main_article_flex_content_h2 {
-    color:#528750;
-    font-size: 25px;
-}
-
-.main_article_item_right_flex_content_div {
-    color:#282828;
-    font-size: 14px;
-    line-height:1.2rem;
-    margin: 5px 0;
-    flex:1
-}
-
-.main_article_item_right_flex_content_p {
-    color:#282828;
-    font-size: 16px;
-    line-height:1.2rem;
-    text-align: justify;
-    flex:1
-
-}
-
-main hr {
-    width: 90%;
-    border: 1px solid #528750;
-    margin: 30px;
-}
 
 /* ---------------------------------------------------------------- */
-/* -------------------------- ABOUT ------------------------------- */
+/* -------------------------- HEADER ------------------------------- */
 /* ---------------------------------------------------------------- */
 
 .header {
@@ -239,10 +160,18 @@ main hr {
     justify-content: center;
     align-items: center; 
     flex-wrap: wrap;
-    min-height: 700px;
+    min-height: 500px;
     border-bottom: #528750 solid 1px;
 
 }
+
+#text-header {
+    font-size: 20px;
+}
+
+/* ---------------------------------------------------------------- */
+/* -------------------------- ABOUT ------------------------------- */
+/* ---------------------------------------------------------------- */
 
 .about {
     display: flex;
@@ -292,14 +221,6 @@ main hr {
 /* -------------------------- STATISTIQUES ------------------------ */
 /* ---------------------------------------------------------------- */
 
-.stat {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center; 
-    padding: 40px;
-}
-
 .card {
     height: 270px;
     width: 270px;
@@ -336,35 +257,89 @@ main hr {
 /* ---------------------------------------------------------------- */
 
 footer {
-    display: flex;
     background-color: #528750;
     border-top: #70ae6d solid 1px;
     color:white;
+}
+
+/* ---------------------------------------------------------------- */
+/* -------------------------- MAP ------------------------------ */
+/* ---------------------------------------------------------------- */
+
+#map {
+    height: 750px;
+    border-bottom: #528750 solid 1px;
+}
+
+.main_article {
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
     justify-content: center;
     align-items: center;
 }
 
-#text-header {
-    font-size: 20px;
+.main_article_flex_item_left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 30%;
+    min-width: 350px;
+    max-width: 350px;
 }
 
-@media screen and (max-width: 700px){
-    #text-header {
-        font-size: 16px;
-    }
+.main_article_flex_item_left img {
+    width: 80%;
+    margin: 20px;
 }
 
-/* PREVOIR DE REFAIRE TOUT CE QUI CE TROUVE AU DESSUS */
+.main_article_item_right_flex_container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 70%;
+    min-width: 350px;
 
-.bg_green {
-    background-color: #528750e7;
+}
+
+.main_article_flex_container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 
 }
 
-.text-green {
-    color: #528750e7;
+.main_article_flex_content_h2 {
+    color:#528750;
+    font-size: 25px;
+}
+
+.main_article_item_right_flex_content_div {
+    color:#282828;
+    font-size: 14px;
+    line-height:1.2rem;
+    margin: 5px 0;
+    flex:1
+}
+
+.main_article_item_right_flex_content_p {
+    color:#282828;
+    font-size: 16px;
+    line-height:1.4rem;
+    flex:1
 
 }
+
+main hr {
+    width: 90%;
+    border: 1px solid #528750;
+    margin: 30px;
+}
+
+/* ---------------------------------------------------------------- */
+/* -------------------------- PAGE SHOW PROJECT-------------------- */
+/* ---------------------------------------------------------------- */
 
 .accordion-button:active {
     background-color: #528750e7;
@@ -391,4 +366,35 @@ footer {
 .accordion-button:not(.collapsed){
     background-color: #528750e7;
     color: white;
+}
+
+/* ---------------------------------------------------------------- */
+/* -----------Personnalisation de la pagination-------------------- */
+/* ---------------------------------------------------------------- */
+
+
+.pagination {
+    --bs-pagination-active-bg: #528750e7;
+    --bs-pagination-active-border-color: #528750e7;
+}
+
+.pagination > li > a
+{
+    background-color: white;
+    color: black;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    background-color: #528750e7;
+    color: white;
+}
+
+.pagination > .active 
+{
+    color: white;
+    background-color: #528750e7 !Important; 
 }

@@ -47,32 +47,32 @@
 {% endblock %}
 
 {% block main %}
-    
+    {{ knp_pagination_rel_links(projects) }}
+
     <h2 class="text-center mt-5">Mes projets</h2>
 
     {% include "components/_alert.html.twig" %}
 
     {% if projects|length > 0 %}
 
-    <div class="d-flex justify-content-end align-items-center mx-5">
+    <div class="text-center my-3">
         <a class="btn btn-success shadow" href="{{path('user_project_create')}}"><i class="fa-solid fa-folder-plus"></i> Nouveau projet</a>
     </div>
     {% elseif projects|length == 0 %}
-        <div class="text-center">
+        <div class="text-center my-3">
             <p>Vous n'avez pas de projet pour le moment.</p>
             <a class="btn btn-success shadow" href="{{path('user_project_create')}}"><i class="fa-solid fa-folder-plus"></i> Nouveau projet</a>
         </div>
     {% endif %}
         
     <div class="container-fluid mb-5">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center p-2">
             {% for project in projects %}
                     
-                <div class="position-relative col-sm-11 col-md-5 col-xl-3 shadow text-center d-flex flex-column justify-content-center p-3 m-3 rounded border border-success border-opacity-25">
+                <div class="position-relative col-sm-10 col-md-5 col-xl-3 shadow text-center d-flex flex-column justify-content-center p-3 m-3 rounded border border-success border-opacity-25">
                     {% if project.isPublished == false %}
-                        <p class="text-danger">Le projet est en cours de vérification avant sa publication.</p>
+                        <p class="text-danger mx-auto w-75">Le projet est en cours de vérification avant publication.</p>
                     {% endif %}
-                        
                         
                     <div class="position-absolute top-0 end-0 m-1">
                         <img width="30" height="40" src="{{ vich_uploader_asset(project.category, 'imageFile') }}" alt="{{ project.category.name }}">
@@ -82,7 +82,7 @@
                         {% if project.image %}
                             <img width="200" height="150" src="{{ vich_uploader_asset(project, 'imageFile') }}" alt="{{ project.title }}">
                         {% else %}
-                            <img width="200" height="150" src="{{ asset('img/no-image.png') }}" alt="{{ project.title }}">
+                            <img width="200" height="150" src="{{ asset('img/no-image.png') }}" alt="Projet {{ project.title }} image par défaut">
                         {% endif %}
                         <h5 class="card-title m-3">{{project.title}}</h5>
                         <div class="rows mb-3">
@@ -134,7 +134,7 @@
                                     </div>
                                 {% else %}
                                     <div class="text-center my-5">
-                                        <img width="200" height="200" src="{{ asset('img/no-image.png') }}" alt="{{ project.title }}">
+                                        <img width="200" height="200" src="{{ asset('img/no-image.png') }}" alt="Projet {{ project.title }} image par défaut">
                                     </div>
                                 {% endif %}
 
@@ -149,6 +149,12 @@
                 </div>                    
 
             {% endfor %}
+
+            {# display navigation #}
+            <div class="navigation d-flex justify-content-center mt-5">
+                {{ knp_pagination_render(projects) }}
+            </div>
+
         </div>
     </div>
 

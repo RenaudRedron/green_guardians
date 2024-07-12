@@ -15,6 +15,7 @@ use App\Repository\ProjectRepository;
 use App\Repository\ReportingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ProjectUserRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -34,7 +35,7 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/user/project/list', name: 'user_project_list', methods: ["GET"])]
-    public function index(): Response
+    public function index(PaginatorInterface $paginator, Request $request): Response
     {
         /**
          * Récupérons l'utilisateur connecté
@@ -45,8 +46,16 @@ class ProjectController extends AbstractController
         // On récupere les données de l'utilisateur connecté
         $user = $this->getUser();
 
+        $projects = $this->projectRepository->findBy(array("user" => $user->getId()));
+
+        $pagination = $paginator->paginate(
+            $projects, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            6 /*limit per page*/
+        );
+
         return $this->render('pages/user/project/index.html.twig', [
-            "projects" => $this->projectRepository->findBy(array("user" => $user->getId())), // On envoi les projets qui appartient a l'user connecté
+            "projects" => $pagination, // On envoi les projets qui appartient a l'user connecté
             "userParticipates" => ( $user ? $this->projectUserRepository->findAll() : 0),
             "networks" => $this->networkRepository->findAll(),
 
@@ -83,62 +92,71 @@ class ProjectController extends AbstractController
             // Récupération des information
             $data = curl_exec($curl);
 
-            // Transformation du json en tableau
-            $json = json_decode($data, true);
+            // Si on arrive bien a récupéré les datas
+            if ($data){
 
-            // Si il existe aucune adresse avec les information entrés
-            if ( empty($json["features"]) ){
+                // Transformation du json en tableau
+                $json = json_decode($data, true);
 
-                // Message d'erreur
-                $this->addFlash("warning", "Cette adresse est introuvable");
+                // Si il existe aucune adresse avec les information entrés
+                if ( empty($json["features"]) ){
 
-            } else {
-
-                if (count($json["features"]) == 0 ) {
                     // Message d'erreur
                     $this->addFlash("warning", "Cette adresse est introuvable");
+
                 } else {
-                    // On mais en forme l'adresse et on l'ajoute a objet
-                    $address = $project->getStreet() . ' ' . $project->getCode() . ' ' . $project->getCity();                
-                    $project->setAddress($address);
 
-                    // On récupère la Latitude et on l'ajoute a objet
-                    $lat = $json["features"][0]["geometry"]["coordinates"][1];
-                    $project->setLatitude($lat);
-
-                    // On récupère la Longitude et on l'ajoute a objet
-                    $lng = $json["features"][0]["geometry"]["coordinates"][0];
-                    $project->setLongitude($lng);
-
-                    // On ajoute la date de création et de modification
-                    $project->setCreatedAt(new DateTimeImmutable());
-                    $project->setUpdatedAt(new DateTimeImmutable());
-
-                    /**
-                     * Récupérons l'utilisateur connecté
-                     * 
-                     * @var User
-                     */
-
-                    // On récupère l'utilisateur connecté et on l'ajoute a l'objet
-                    $user = $this->getUser();
-                    $project->setUser($user);
-
-                    // Si la date de fin est plutôt que la date de début ou si la date de fin est avant la date actuelle
-                    if ($project->getEndDate() != null && ($project->getStartDate() > $project->getEndDate() || (new DateTimeImmutable()) > $project->getEndDate())) {
-                        $this->addFlash("warning", "La date de fin choisi pour le projet est incorrect.");
+                    if (count($json["features"]) == 0 ) {
+                        // Message d'erreur
+                        $this->addFlash("warning", "Cette adresse est introuvable");
                     } else {
+                        // On mais en forme l'adresse et on l'ajoute a objet
+                        $address = $project->getStreet() . ' ' . $project->getCode() . ' ' . $project->getCity();                
+                        $project->setAddress($address);
 
-                        // On ajoute l'objet en BDD
-                        $this->entityManager->persist($project);
-                        $this->entityManager->flush();
+                        // On récupère la Latitude et on l'ajoute a objet
+                        $lat = $json["features"][0]["geometry"]["coordinates"][1];
+                        $project->setLatitude($lat);
+
+                        // On récupère la Longitude et on l'ajoute a objet
+                        $lng = $json["features"][0]["geometry"]["coordinates"][0];
+                        $project->setLongitude($lng);
+
+                        // On ajoute la date de création et de modification
+                        $project->setCreatedAt(new DateTimeImmutable());
+                        $project->setUpdatedAt(new DateTimeImmutable());
+
+                        /**
+                         * Récupérons l'utilisateur connecté
+                         * 
+                         * @var User
+                         */
+
+                        // On récupère l'utilisateur connecté et on l'ajoute a l'objet
+                        $user = $this->getUser();
+                        $project->setUser($user);
+
+                        // Si la date de fin est plutôt que la date de début ou si la date de fin est avant la date actuelle
+                        if ($project->getEndDate() != null && ($project->getStartDate() > $project->getEndDate() || (new DateTimeImmutable()) > $project->getEndDate())) {
+                            $this->addFlash("warning", "La date de fin choisi pour le projet est incorrect.");
+                        } else {
+
+                            // On ajoute l'objet en BDD
+                            $this->entityManager->persist($project);
+                            $this->entityManager->flush();
+
+                            $this->addFlash("success", "Le projet a été ajouter avec succès.");
+
+                            return $this->redirectToRoute('user_project_list');
+                        }
 
                         $this->addFlash("success", "Le projet a été ajouter avec succès.");
 
-                        return $this->redirectToRoute('user_project_list');
-                    }
-                } 
+                    } 
+                }
 
+            } else {
+                $this->addFlash("warning", "Un problème a eu lieux lors de la récupération des données.");
             }
             
         }
@@ -182,61 +200,66 @@ class ProjectController extends AbstractController
             // Récupération des information
             $data = curl_exec($curl);
 
-            // Transformation du json en tableau
-            $json = json_decode($data, true);
+            // Si on arrive bien a récupéré les datas
+            if ($data){
 
-            // Si il existe aucune adresse avec les information entrés
-            if ( empty($json["features"]) ){
+                // Transformation du json en tableau
+                $json = json_decode($data, true);
 
-                // Message d'erreur
-                $this->addFlash("warning", "Cette adresse est introuvable");
+                // Si il existe aucune adresse avec les information entrés
+                if ( empty($json["features"]) ){
 
-            } else {
-
-                if (count($json["features"]) == 0 ) {
                     // Message d'erreur
                     $this->addFlash("warning", "Cette adresse est introuvable");
+
                 } else {
-                    // On mais en forme l'adresse et on l'ajoute a objet
-                    $address = $project->getStreet() . ' ' . $project->getCode() . ' ' . $project->getCity();                
-                    $project->setAddress($address);
 
-                    // On récupère la Latitude et on l'ajoute a objet
-                    $lat = $json["features"][0]["geometry"]["coordinates"][1];
-                    $project->setLatitude($lat);
-
-                    // On récupère la Longitude et on l'ajoute a objet
-                    $lng = $json["features"][0]["geometry"]["coordinates"][0];
-                    $project->setLongitude($lng);
-
-                    // On ajoute la date de création et de modification
-                    $project->setUpdatedAt(new DateTimeImmutable());
-
-                    /**
-                     * Récupérons l'utilisateur connecté
-                     * 
-                     * @var User
-                     */
-
-                    // On récupère l'utilisateur connecté et on l'ajoute a l'objet
-                    $user = $this->getUser();
-                    $project->setUser($user);
-
-                    // Si la date de fin est plutôt que la date de début ou si la date de fin est avant la date actuelle
-                    if ($project->getEndDate() != null && ($project->getStartDate() > $project->getEndDate() || (new DateTimeImmutable()) > $project->getEndDate())) {
-                        $this->addFlash("warning", "La date de fin choisi pour le projet est incorrect.");
+                    if (count($json["features"]) == 0 ) {
+                        // Message d'erreur
+                        $this->addFlash("warning", "Cette adresse est introuvable");
                     } else {
+                        // On mais en forme l'adresse et on l'ajoute a objet
+                        $address = $project->getStreet() . ' ' . $project->getCode() . ' ' . $project->getCity();                
+                        $project->setAddress($address);
 
-                        // On ajoute l'objet en BDD
-                        $this->entityManager->persist($project);
-                        $this->entityManager->flush();
+                        // On récupère la Latitude et on l'ajoute a objet
+                        $lat = $json["features"][0]["geometry"]["coordinates"][1];
+                        $project->setLatitude($lat);
 
-                        $this->addFlash("success", "Le projet a été modifier avec succès.");
+                        // On récupère la Longitude et on l'ajoute a objet
+                        $lng = $json["features"][0]["geometry"]["coordinates"][0];
+                        $project->setLongitude($lng);
 
-                        return $this->redirectToRoute('user_project_list');
-                    }
-                } 
+                        // On ajoute la date de création et de modification
+                        $project->setUpdatedAt(new DateTimeImmutable());
 
+                        /**
+                         * Récupérons l'utilisateur connecté
+                         * 
+                         * @var User
+                         */
+
+                        // On récupère l'utilisateur connecté et on l'ajoute a l'objet
+                        $user = $this->getUser();
+                        $project->setUser($user);
+
+                        // Si la date de fin est plutôt que la date de début ou si la date de fin est avant la date actuelle
+                        if ($project->getEndDate() != null && ($project->getStartDate() > $project->getEndDate() || (new DateTimeImmutable()) > $project->getEndDate())) {
+                            $this->addFlash("warning", "La date de fin choisi pour le projet est incorrect.");
+                        } else {
+
+                            // On ajoute l'objet en BDD
+                            $this->entityManager->persist($project);
+                            $this->entityManager->flush();
+
+                            $this->addFlash("success", "Le projet a été modifier avec succès.");
+
+                            return $this->redirectToRoute('user_project_list');
+                        }
+                    } 
+                }
+            } else {
+                $this->addFlash("warning", "Un problème a eu lieux lors de la récupération des données.");
             }
             
         }
@@ -283,7 +306,7 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/visitor/project/{id<\d+>}/show', name: 'user_project_show', methods: ["GET","POST"])]
-    public function show(Project $project, Request $request): Response
+    public function show(Project $project, Request $request, PaginatorInterface $paginator): Response
     {   
 
         /**
@@ -330,10 +353,13 @@ class ProjectController extends AbstractController
                 $this->entityManager->flush();
 
                 $this->addFlash("success", "Le commentaire a été ajouter avec succès.");
+                
+                $comments = $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC'));
+                $pagination = $this->pagination($comments, $project, $request, $paginator);
 
                 return $this->redirectToRoute("user_project_show", [
                     "id" => $project->getId(),
-                    "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                    "comments" => $pagination,
                     "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
                     "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
                 ]);
@@ -342,9 +368,14 @@ class ProjectController extends AbstractController
 
         }
 
+        
+        $comments = $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC'));
+        // Permet la pagination des données
+        $pagination = $this->pagination($comments, $project, $request, $paginator);
+        
         return $this->render('pages/visitor/project/show.html.twig', [
             "form" => $form,
-            "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+            "comments" => $pagination,
             "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
             "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
             "networks" => $this->networkRepository->findAll(),
@@ -353,7 +384,7 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/user/project/{id<\d+>}/join', name: 'user_project_join', methods: ["POST"])]
-    public function join(Project $project, Request $request): Response
+    public function join(Project $project, Request $request, PaginatorInterface $paginator): Response
     {
 
         // On instancie l'objet ProjectUser
@@ -376,6 +407,10 @@ class ProjectController extends AbstractController
         // Si le csrf token est valide
         if ($this->isCsrfTokenValid('join_project_' . $project->getId(), $request->request->get('_csrf_token'))) {
             
+            // Permet la pagination des données
+            $comments = $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC'));
+            $pagination = $this->pagination($comments, $project, $request, $paginator);
+
             // On vérifie si le projet est terminé
             if ($project->getEndDate() != null ){
                 if ( $project->getEndDate() < new DateTimeImmutable)
@@ -385,7 +420,7 @@ class ProjectController extends AbstractController
 
                     return $this->redirectToRoute("user_project_show", [
                         "id" => $project->getId(),
-                        "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                        "comments" => $pagination,
                         "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
                         "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
                     ]);
@@ -409,7 +444,7 @@ class ProjectController extends AbstractController
 
                         return $this->redirectToRoute("user_project_show", [
                             "id" => $project->getId(),
-                            "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                            "comments" => $pagination,
                             "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
                             "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
                         ]);
@@ -439,7 +474,7 @@ class ProjectController extends AbstractController
 
         return $this->redirectToRoute("user_project_show", [
             "id" => $project->getId(),
-            "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+            "comments" => $pagination,
             "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
             "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0)
         ]);
@@ -447,7 +482,7 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/user/comment/{id<\d+>}/{id_project<\d+>}/edit', name: 'user_comment_edit', methods: ["GET","POST"])]
-    public function editComment(int $id, int $id_project, Request $request): Response
+    public function editComment(int $id, int $id_project, Request $request, PaginatorInterface $paginator): Response
     {
         
         // Récupérez le commentaire et le projet en utilisant les identifiants
@@ -463,6 +498,10 @@ class ProjectController extends AbstractController
         // On récupere les données de l'utilisateur connecté
         $user = $this->getUser();
 
+        // Permet la pagination des données
+        $comments = $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC'));
+        $pagination = $this->pagination($comments, $project, $request, $paginator);
+        
         // On controle si le commentaire que l'utilisateur souhaite modifier soit bien son commentaire
         if ( $project == null)
         {
@@ -472,7 +511,7 @@ class ProjectController extends AbstractController
         {
             return $this->redirectToRoute("user_project_show", [
                 "id" => $project->getId(),
-                "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                "comments" => $pagination,
                 "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
                 "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
                 "networks" => $this->networkRepository->findAll(),
@@ -481,7 +520,7 @@ class ProjectController extends AbstractController
         elseif ( $comment->getProject()->getId() != $project->getId() || $this->getUser() != $comment->getUser()) {
             return $this->redirectToRoute("user_project_show", [
                 "id" => $project->getId(),
-                "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                "comments" => $pagination,
                 "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
                 "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
                 "networks" => $this->networkRepository->findAll(),
@@ -508,9 +547,14 @@ class ProjectController extends AbstractController
 
             $this->addFlash("success", "Le commentaire a été modifier avec succès.");
 
+            // Permet la pagination des données
+            $comments = $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC'));
+            $pagination = $this->pagination($comments, $project, $request, $paginator);
+        
+
             return $this->redirectToRoute("user_project_show", [
                     "id" => $project->getId(),
-                    "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                    "comments" => $pagination,
                     "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
                     "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
                     "networks" => $this->networkRepository->findAll(),
@@ -526,7 +570,7 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/user/comment/{id<\d+>}/{id_project<\d+>}/delete', name: 'user_comment_delete', methods: ["POST"])]
-    public function deleteComment(int $id, int $id_project, Request $request): Response
+    public function deleteComment(int $id, int $id_project, Request $request, PaginatorInterface $paginator): Response
     {
 
         // Récupérez le commentaire et le projet en utilisant les identifiants
@@ -542,6 +586,10 @@ class ProjectController extends AbstractController
         // On récupere les données de l'utilisateur connecté
         $user = $this->getUser();
 
+        // Permet la pagination des données
+        $comments = $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC'));
+        $pagination = $this->pagination($comments, $project, $request, $paginator);
+
         // On controle si le commentaire que l'utilisateur souhaite modifier soit bien son commentaire
         if ( $project == null)
         {
@@ -551,7 +599,7 @@ class ProjectController extends AbstractController
         {
             return $this->redirectToRoute("user_project_show", [
                 "id" => $project->getId(),
-                "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                "comments" => $pagination,
                 "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
                 "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
                 "networks" => $this->networkRepository->findAll(),
@@ -560,7 +608,7 @@ class ProjectController extends AbstractController
         elseif ( $comment->getProject()->getId() != $project->getId() || $this->getUser() != $comment->getUser()) {
             return $this->redirectToRoute("user_project_show", [
                 "id" => $project->getId(),
-                "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+                "comments" => $pagination,
                 "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
                 "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
                 "networks" => $this->networkRepository->findAll(),
@@ -591,13 +639,30 @@ class ProjectController extends AbstractController
             $this->entityManager->flush();
         }
 
+        // Permet la pagination des données
+        $comments = $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC'));
+        $pagination = $this->pagination($comments, $project, $request, $paginator);
+
         return $this->redirectToRoute("user_project_show", [
             "id" => $project->getId(),
-            "comments" => $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC')),
+            "comments" =>  $pagination,
             "project" => $this->projectRepository->findBy(array("id" => $project->getId())),
             "userParticipates" => ( $user ? $this->projectUserRepository->findBy(array("project" => $project->getId(), "user" => $user->getId())) : 0),
             "networks" => $this->networkRepository->findAll(),
         ]);
     }
 
+    // Permet d'ajouter la pagination au données récupérer en BDD
+    private function pagination($elements, Project $project, Request $request, PaginatorInterface $paginator)
+    {
+
+        $comments = $this->commentRepository->findBy(array("project" => $project->getId()),array('createdAt'=>'DESC'));
+        $pagination = $paginator->paginate(
+            $elements, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            5 /*limit per page*/
+        );
+
+        return $pagination;
+    }
 }

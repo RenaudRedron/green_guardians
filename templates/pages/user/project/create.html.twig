@@ -141,7 +141,7 @@
                     <hr class="mb-5">
 
                     <div class="mb-3">
-                        <label for="user_project_form_street">Rue</label>
+                        <label for="user_project_form_street">Rue<strong class="text-danger">*</strong></label>
                         <div class="text-danger">{{ form_errors(form.street) }}</div>
                         {{ form_widget(form.street, {"attr": {"class":"form-control"}}) }}
                     </div>

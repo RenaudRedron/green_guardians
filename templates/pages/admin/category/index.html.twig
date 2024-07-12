@@ -64,7 +64,7 @@
                         </td>
                         <td>
                             {% if category.description %}
-                                <a class="btn btn-sm btn-dark" href="">Lire</a>
+                            <a class="btn btn-dark" href="#" data-bs-toggle="modal" data-bs-target="{{'#modal'~category.id}}">Voir</a>
                             {% else %}
                                 Aucune
                             {% endif %}
@@ -79,6 +79,27 @@
                             </form>
                         </td>
                     </tr>
+
+                    <!-- Modal -->
+                    <div class="modal w-100" id="{{'modal'~category.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop" aria-hidden="true">
+                        <div class="modal-dialog w-100">
+                            <div class="modal-content w-100">
+
+                                <div class="p-3 text-center">
+                                    <h4>Description</h4>
+
+                                    <p>{{category.description}}</p>
+                                
+                                </div>
+
+                                <div class="modal-footer w-100">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+
+
                     {% endfor %}
             </tbody>
 

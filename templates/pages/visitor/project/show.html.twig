@@ -48,6 +48,7 @@
 {% endblock %}
 
 {% block main %}
+    {{ knp_pagination_rel_links(comments) }}
 
     <div class="container">
 
@@ -57,7 +58,7 @@
             </div>
         {% else %}
             <div class="text-center mt-5 mb-3">
-                <img width="200" height="200" src="{{ asset('img/no-image.png') }}" alt="{{ project[0].title }}">
+                <img width="200" height="200" src="{{ asset('img/no-image.png') }}" alt=" Projet {{ project[0].title }} image par défaut">
             </div>
         {% endif %}
 
@@ -106,10 +107,10 @@
                 {% endif %}
             </div> 
 
-        <div class="accordion mb-5 " id="accordionPanelsStayOpenExample">
+        <div class="accordion mb-5 shadow" id="accordionPanelsStayOpenExample">
 
             <div class="accordion-item">
-                <h2 class="accordion-header">
+                <h2 class="accordion-header shadow">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse1" aria-expanded="true" aria-controls="panelsStayOpen-collapse1">
                     Détail du projet
                 </button>
@@ -122,7 +123,7 @@
             </div>
 
             <div class="accordion-item">
-                <h2 class="accordion-header">
+                <h2 class="accordion-header shadow">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse2" aria-expanded="false" aria-controls="panelsStayOpen-collapse2">
                     Information sur le projet
                 </button>
@@ -148,7 +149,7 @@
             </div>
 
             <div class="accordion-item">
-                <h2 class="accordion-header">
+                <h2 class="accordion-header shadow">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse3" aria-expanded="false" aria-controls="panelsStayOpen-collapse3">
                     Liste des participants ({{project[0].projectUsers|length}})
                 </button>
@@ -169,7 +170,7 @@
             </div>
 
             <div class="accordion-item">
-                <h2 class="accordion-header">
+                <h2 class="accordion-header shadow">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse4" aria-expanded="true" aria-controls="panelsStayOpen-collapse4">
                     Commentaires ({{comments|length}})
                 </button>
@@ -188,7 +189,7 @@
                                         {{ form_widget(form.content, {"attr": {"class":"form-control"}}) }}
                                     </div>
                                     <div class="mb-3 text-center">
-                                        <button formnovalidate type="submit" class="btn btn-success w-75">Ajouter un commentaire</button>
+                                        <button formnovalidate type="submit" class="btn btn-success w-75 shadow">Ajouter un commentaire</button>
                                     </div>
                                 {{ form_end(form) }}
                             <hr class="mx-auto">
@@ -227,7 +228,7 @@
 
 
                                     </div>
-                                    <div class="border border-2 rounded-3 p-3">
+                                    <div class="border border-2 rounded-3 p-3 ">
                                         {{comment.content}}
                                     </div>
                                     <div class="text-end">
@@ -238,6 +239,12 @@
                                     </div>
                                 </div>
                             {% endfor %}
+
+                            {# display navigation #}
+                            <div class="navigation d-flex justify-content-center mt-5">
+                                {{ knp_pagination_render(comments) }}
+                            </div>
+
                         </div>
                     </div>
                 </div>
