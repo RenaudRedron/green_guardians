@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Tag;
 use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Persistence\ObjectManager;

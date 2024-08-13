@@ -82,17 +82,18 @@ class ProjectController extends AbstractController
             $code = $project->getCode();
             $city = str_replace(" ", "+", $project->getCity());;
 
-            // Envoi a l'api
             $curl = curl_init("http://api-adresse.data.gouv.fr/search/?q={$street}+{$code}+{$city}&type=housenumber");
             curl_setopt_array($curl, [
-                CURLOPT_TIMEOUT => 1,
-                CURLOPT_RETURNTRANSFER => true
+                CURLOPT_TIMEOUT => 5,
+                CURLOPT_RETURNTRANSFER => true,
+    
             ]);
-
-            // Récupération des information
+            
             $data = curl_exec($curl);
 
-            // Si on arrive bien a récupéré les datas
+            curl_close($curl);
+
+            // Si récupération des datas
             if ($data){
 
                 // Transformation du json en tableau
@@ -149,8 +150,6 @@ class ProjectController extends AbstractController
 
                             return $this->redirectToRoute('user_project_list');
                         }
-
-                        $this->addFlash("success", "Le projet a été ajouter avec succès.");
 
                     } 
                 }

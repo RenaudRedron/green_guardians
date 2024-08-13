@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[UniqueEntity('name', message: 'Impossible de créer plusieurs tag avec le même nom.')]
 #[ORM\Entity(repositoryClass: TagRepository::class)]
@@ -19,6 +20,7 @@ class Tag
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['project_read', 'project_write'])]
     #[Assert\NotBlank(message: "Le nom du tag est obligatoire.")]
     #[Assert\Length(
         max: 255,
