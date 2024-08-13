@@ -31,10 +31,40 @@
     <section class="container-fluid">
     
         {% if pagination|length == 0 %}
-            <div class="text-center">
+            <div class="text-center mt-5">
                 <p>Aucun projet pour le moment.</p>
             </div>
         {% endif %}
+                <form class="container-fluid d-flex justify-content-end mt-3" action="{{path('app_map_filter')}}" method="post">
+
+                    <div class="form-group mx-1">
+                        <select class="form-select col-xs-2 input-sm" name="category" aria-label="Select category">
+                            <option value="null" selected>Catégorie</option>
+                            {% for category in categories %}
+                                <option value={{category.name}}>{{category.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group mx-1">
+                        <select class="form-select col-xs-2 input-sm" name="code" aria-label="Select departement">
+                            <option value="null" selected>Département</option>
+                            {% for code in listCode %}
+                                <option value={{code}}>{{code}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group mx-1">
+                        <button class="btn btn-success" type="submit">
+                            Filtrer
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
         {% for project in pagination %}
                             
         <article class="container-fluid row mt-5">
@@ -67,20 +97,19 @@
                     {% if project.tags is empty %}
                     {% else %}
                         {% for tag in project.tags %}
-                            <span class="badge text-bg-success">{{tag.name}}</span> 
+                            <a class="badge text-bg-success" href="{{ path('app_map_filter_tag',{'id':tag.id}) }}">{{tag.name}}</a>
                         {% endfor %}
                     {% endif %}
                 </div>
             </div>
         </article>
 
-
-            <hr>
+            <hr class="mx-auto">
 
         {% endfor %}
 
         {# display navigation #}
-        <div class="navigation">
+        <div class="navigation d-flex justify-content-center align-items-center mb-3">
             {{ knp_pagination_render(pagination) }}
         </div>
 

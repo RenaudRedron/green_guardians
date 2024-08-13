@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use App\Entity\Project;
 use App\Form\UserProjectFormType;
 use App\Repository\CommentRepository;
+use App\Repository\NetworkRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\ReportingRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,6 +27,8 @@ class ProjectController extends AbstractController
         private ProjectUserRepository $projectUserRepository,
         private CommentRepository $commentRepository,
         private ReportingRepository $reportingRepository,
+        private NetworkRepository $networkRepository,
+
     ) {
     }
 
@@ -184,7 +187,8 @@ class ProjectController extends AbstractController
 
         return $this->render('pages/admin/project/edit.html.twig', [
             "form" => $form->createView(),
-            "project" => $project
+            "project" => $project,
+            "networks" => $this->networkRepository->findAll(),
         ]);
     }
 

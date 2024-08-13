@@ -8,6 +8,7 @@ use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use Symfony\Component\Mime\Address;
+use App\Repository\NetworkRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +21,10 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier)
+    public function __construct(
+        private EmailVerifier $emailVerifier,
+        private NetworkRepository $networkRepository,
+        )
     {
     }
 
@@ -37,7 +41,7 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
+
             $user->setPassword(
                     $userPasswordHasher->hashPassword(
                     $user,
@@ -51,7 +55,6 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
                     ->from(new Address('contact@green-guardians.fr', 'Contact - Green Guardians'))
@@ -59,8 +62,6 @@ class RegistrationController extends AbstractController
                     ->subject('Veuillez confirmer votre email.')
                     ->htmlTemplate('pages/visitor/registration/confirmation_email.html.twig')
             );
-
-            // do anything else you need here, like send an email
 
             return $this->redirectToRoute('app_waiting-for-email-verification');
         }
@@ -73,7 +74,10 @@ class RegistrationController extends AbstractController
     #[Route('/register/waiting-for-email-verification', name: 'app_waiting-for-email-verification', methods:['GET'])]
     public function  waitingForEmailVerification(): Response
     {
-        return $this->render('pages/visitor/registration/waiting_for_email_verification.html.twig');
+        return $this->render('pages/visitor/registration/waiting_for_email_verification.html.twig',[
+            "networks" => $this->networkRepository->findAll(),
+        ]
+    );
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
