@@ -1,0 +1,33 @@
+.image-container {
+    margin-top: 50vh; /* Pour espacer les images */
+    position: relative;
+}
+
+.zoom  {
+    width: 100%;
+    transform: scale(0.8); /* L'image commence plus petite */
+    opacity: 0.5; /* L'image commence semi-transparente */
+    transition: transform 2s ease, opacity 2s ease; /* Animation fluide */
+}
+
+.element-visible {
+    transform: scale(1); /* Agrandit l'image */
+    opacity: 1; /* Rend l'image complètement visible */
+}
+
+.animate-image {
+    animation: moveUpDown 2s ease-in-out infinite; /* Animation infinie */
+}
+
+/* Animation de montée et descente */
+@keyframes moveUpDown {
+    0% {
+        transform: translateY(0); /* Position de départ */
+    }
+    50% {
+        transform: translateY(-9px); /* Montée */
+    }
+    100% {
+        transform: translateY(0); /* Retour à la position de départ */
+    }
+}

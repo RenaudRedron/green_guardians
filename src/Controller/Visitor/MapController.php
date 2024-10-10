@@ -35,7 +35,14 @@ class MapController extends AbstractController
 
         // On récupére que les projets en cours ou a venir
         foreach ($projects as $project) {
-            array_push($newProject, $project);
+
+            if ($project->getEndDate() != null) {
+                if ($project->getEndDate() >= new DateTimeImmutable()) {
+                    array_push($newProject, $project);
+                }
+            } else {
+                array_push($newProject, $project);
+            }
         }
 
         // Récupération des différents département des projets en cours ou a venir
@@ -177,7 +184,7 @@ class MapController extends AbstractController
         ]);
     }
 
-    #[Route('/map/{id<\d+>}/tag', name: 'app_map_filter_tag')]
+    #[Route('/map/tag/{id<\d+>}', name: 'app_map_filter_tag')]
     public function filterTag($id, SerializerInterface $serializer, PaginatorInterface $paginator, Request $request): Response
     {
         $newProject = [];

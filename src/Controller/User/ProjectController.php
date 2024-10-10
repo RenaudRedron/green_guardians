@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use App\Entity\Comment;
 use App\Entity\Project;
 use App\Entity\ProjectUser;
+use App\Entity\Reporting;
 use App\Form\CommentFormType;
 use App\Form\UserProjectFormType;
 use App\Repository\CommentRepository;
@@ -620,7 +621,6 @@ class ProjectController extends AbstractController
 
             $this->addFlash("danger", "Le commentaire a été supprimer");
 
-            // On séléctionne les données de la table contact qu'on souhaite passé avec un user sur null
             $reportings = $this->reportingRepository->findBy(["comment" => $comment]);
             foreach ($reportings as $reporting) {
 

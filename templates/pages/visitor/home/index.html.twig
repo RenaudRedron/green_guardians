@@ -28,7 +28,8 @@
 
     {# CSS #}
     <link rel="stylesheet" href={{ asset('css/style.css') }}>
-    
+    <link rel="stylesheet" href={{ asset('css/scrollImage.css') }}>
+
     {# GOOGLE MAPS #}
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script type="module" src={{ asset('js/map.js') }}></script>
@@ -81,7 +82,7 @@
 
         <section id="about" class="container-fluid py-3">
         
-        <div class="row">
+        <div class="row zoom p-0 m-0">
             <div class="col-md-8 d-flex flex-column justify-content-center align-items-center p-3 text-center">
                 <h3 class="text-green mb-3 fs-1 fontPacifico">Notre mission</h3>
                 <p class="fs-5">
@@ -93,51 +94,51 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row zoom p-0 m-0">
             <div class="col-md-4 d-flex justify-content-center align-items-center">
-                <img class="w-75" src="{{ asset('img/ecology-88.png') }}" alt="L'image resprésente un personnage qui plante des arbres">
+                <img class="w-75 " src="{{ asset('img/ecology-88.png') }}" alt="L'image resprésente un personnage qui plante des arbres">
             </div>
             <div class="col-md-8 d-flex flex-column justify-content-center align-items-center p-3 text-center">
-                <h3 class="text-green mb-3 fs-1 fontPacifico">Pourquoi ce projet ?</h3>
-                <p class="fs-5">
+                <h3 class="text-green mb-3 fs-1 fontPacifico ">Pourquoi ce projet ?</h3>
+                <p class="fs-5 ">
                     La protection de notre faune et de notre flore est plus urgente que jamais. Les initiatives locales jouent un rôle crucial dans la lutte contre le changement climatique et la dégradation environnementale. Green Guardians est né de la volonté de faciliter ces actions locales et de les rendre visibles et accessibles à tous. En centralisant les projets environnementaux sur une plateforme unique, nous espérons encourager la participation et la collaboration de chacun.
                 </p>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row zoom p-0 m-0">
             <div class="col-md-8 d-flex flex-column justify-content-center align-items-center p-3 text-center">
-                <h3 class="text-green mb-3 fs-1 fontPacifico">Pour qui ?</h3>
-                <p class="fs-5">
+                <h3 class="text-green mb-3 fs-1 fontPacifico ">Pour qui ?</h3>
+                <p class="fs-5 ">
                     Green Guardians s'adresse à toutes les personnes et organisations passionnées par la préservation de l'environnement. Les associations y trouvent un outil puissant pour mobiliser des bénévoles et promouvoir leurs initiatives. Les communes peuvent impliquer activement leurs habitants dans des projets locaux de conservation, renforçant ainsi le lien communautaire. Quant aux particuliers, ils disposent d'une plateforme pour s'engager concrètement et localement dans des actions écologiques, contribuant ainsi à la protection de leur environnement immédiat.
                 </p>
             </div>
             <div class="col-md-4 d-flex justify-content-center align-items-center ">
-                <img class="w-75" src="{{ asset('img/mountain-1-34.png') }}" alt="L'image resprésente une montagne">
+                <img class="w-75 " src="{{ asset('img/mountain-1-34.png') }}" alt="L'image resprésente une montagne">
             </div>
         </div>
 
-        <div class="row">
+        <div class="row zoom p-0 m-0">
             <div class="col-md-4 d-none d-sm-flex justify-content-center align-items-center">
-                <img class="w-75" src="{{ asset('img/ecology-76-7de93.png') }}" alt="L'image resprésente une main avec des arbres qui pousse dedans">
+                <img class="w-75 " src="{{ asset('img/ecology-76-7de93.png') }}" alt="L'image resprésente une main avec des arbres qui pousse dedans">
             </div>
             <div class="col-md-8 d-flex flex-column justify-content-center align-items-center p-3 text-center">
-                <h3 class="text-green mb-3 fs-1 fontPacifico">Comment ça marche ?</h3>
-                <p class="fs-5">
+                <h3 class="text-green mb-3 fs-1 fontPacifico ">Comment ça marche ?</h3>
+                <p class="fs-5 ">
                     Green Guardians simplifie la mise en relation et la participation à des projets environnementaux. Les utilisateurs peuvent publier leurs initiatives, qu'il s'agisse de reboisement, de nettoyage, de campagnes de sensibilisation, etc. Ces projets sont ensuite affichés sur une carte interactive, facilitant ainsi la découverte et l'accès aux actions locales. Les utilisateurs peuvent consulter cette carte pour trouver des projets proches de chez eux, y participer activement et échanger leurs idées et expériences via les commentaires. En unissant nos forces sur cette plateforme, nous rendons la préservation de la nature plus accessible et collaborative.
                 </p>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row zoom p-0 m-0">
             <div class="col-md-8 d-flex flex-column justify-content-center align-items-center p-3 text-center">
-                <h3 class="text-green mb-3 fs-1 fontPacifico">Rejoignez-nous</h3>
-                <p class="fs-5">
+                <h3 class="text-green mb-3 fs-1 fontPacifico ">Rejoignez-nous</h3>
+                <p class="fs-5 ">
                     Green Guardians est plus qu'une simple plateforme, c'est une communauté dédiée à la protection de notre planète. Ensemble, nous pouvons faire la différence. Rejoignez-nous dès aujourd'hui et devenez un gardien de la nature pour un avenir plus vert et plus durable.
                 </p>
             </div>
             <div class="col-md-4 d-none d-sm-flex justify-content-center align-items-center">
-                <img class="w-75" src="{{ asset('img/ecology-76.png') }}" alt="L'image resprésente une planète avec des arbres et montagnes">
+                <img class="w-75 " src="{{ asset('img/ecology-76.png') }}" alt="L'image resprésente une planète avec des arbres et montagnes">
             </div>
         </div>
 
@@ -161,10 +162,10 @@
 
                 <div class="card text-center p-2">
                     <div class="text-center mb-2">
-                        <img class="w-50 m-2" src={{ asset("img/upload/stats/"~category.imageStat) }} alt="Image d'illustration de la statistique {{category.name}}">
+                        <img class="w-50 m-2 zoom" src={{ asset("img/upload/stats/"~category.imageStat) }} alt="Image d'illustration de la statistique {{category.name}}">
                     </div>
-                    <h5 class="card-title text-uppercase text-muted mb-0">{{category.name}}</h5>
-                    <span class="h2 font-weight-bold mb-1">{{nb}}</span>
+                    <h5 class="card-title text-uppercase text-muted mb-0 zoom">{{category.name}}</h5>
+                    <span class="h2 font-weight-bold mb-1 zoom">{{nb}}</span>
                 </div>
             {% endfor %}
             
@@ -218,7 +219,7 @@
             </p>
             <p>
                 {% for network in networks %}
-                    <a href="{{network.URL}}" target="_blank"><img class="mx-1" width="25" height="25" src="{{ vich_uploader_asset(network, 'imageFile') }}" alt="Icone de réseau social"></a>
+                    <a href="{{network.URL}}" target="_blank"><img class="mx-1 animate-image" width="25" height="25" src="{{ vich_uploader_asset(network, 'imageFile') }}" alt="Icone de réseau social"></a>
                 {% endfor %}
             </p>
         </div>
@@ -240,6 +241,8 @@
         });
     })
     </script>
+
+    <script src={{ asset('js/scrollImage.js') }}></script>
 </body>
 
 </html>

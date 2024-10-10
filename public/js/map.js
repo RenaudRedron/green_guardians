@@ -53,8 +53,6 @@ async function initMap() {
 
   });
 
-  console.log(markers)
-
   // On boucle sur le tableaux markers pour placer nos repère sur la carte
   markers.forEach(([position, id, image, title, description, email, phone, category_image, start_date, end_date], i) => {
     // On créé le repère
