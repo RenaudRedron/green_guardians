@@ -1,4 +1,4 @@
-##Présentation du Projet Green Guardians
+## Présentation du Projet Green Guardians
 
 Dans le cadre de ma formation de **développeur web et web mobile**, j'ai réalisé un projet personnel intitulé **Green Guardians**, lancé en 2024. Ce projet a pour objectif de créer une carte interactive qui répertorie et promeut les actions écologiques tant au niveau local que national.
 
