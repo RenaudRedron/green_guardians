@@ -12,6 +12,14 @@ Ce projet m’a permis d’appliquer les compétences acquises durant ma formati
 
 Visitez le site : [Green Guardians](https://green-guardians.fr/).
 
+## Prérequis
+
+- **PHP** : Version 8.2 ou supérieure.
+- **Composer** : Outil de gestion des dépendances PHP.
+- **Symfony** : Version 7
+- **Symfony CLI** : Outil de ligne de commande pour gérer les projets Symfony.
+- **MySQL** : Version 5.7 ou supérieure (ou MariaDB 10.3 ou supérieure).
+
 ## Installation
 
 Cloner le dépôt
