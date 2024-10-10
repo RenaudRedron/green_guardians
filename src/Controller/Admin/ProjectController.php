@@ -204,18 +204,17 @@ class ProjectController extends AbstractController
             foreach ($reportings as $reporting) {
 
                 $this->entityManager->remove($reporting);
+            }
 
-            }                
-            
             $this->entityManager->flush();
-
-            $this->addFlash("danger", "Le projet a été supprimer");
 
             // On fait appel a entityManager pour préparer la requete
             $this->entityManager->remove($project);
 
             // On fait appel a entityManager pour exécuter la requete
             $this->entityManager->flush();
+
+            $this->addFlash("danger", "Le projet a été supprimer");
         }
 
         return $this->redirectToRoute("admin_project_index");

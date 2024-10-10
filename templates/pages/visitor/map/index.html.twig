@@ -67,12 +67,12 @@
 
         {% for project in pagination %}
                             
-        <article class="container-fluid row mt-5">
+        <article class="container-fluid row zoom p-0 m-0 mt-5">
             <div class="col-lg-3 col-md-6 text-center p-1">
                 {% if project.image %}
-                    <a href="{{path('user_project_show',{'id':project.id})}}"><img height="180" width="230" class="p-2" src="{{ vich_uploader_asset(project, 'imageFile') }}" alt="{{ project.title }}"></a>
+                    <a href="{{path('user_project_show',{'id':project.id})}}"><img height="180" width="230" class="p-2 w-75" src="{{ vich_uploader_asset(project, 'imageFile') }}" alt="{{ project.title }}"></a>
                 {% else %}
-                    <a href="{{path('user_project_show',{'id':project.id})}}"><img height="200" width="200" class="p-2" src="{{ asset('img/no-image.png') }}" alt="Projet {{ project.title }} image par défaut"></a>
+                    <a href="{{path('user_project_show',{'id':project.id})}}"><img height="200" width="200" class="p-2 w-75" src="{{ asset('img/no-image.png') }}" alt="Projet {{ project.title }} image par défaut"></a>
                 {% endif %}
             </div>
 
@@ -97,7 +97,7 @@
                     {% if project.tags is empty %}
                     {% else %}
                         {% for tag in project.tags %}
-                            <a class="badge text-bg-success" href="{{ path('app_map_filter_tag',{'id':tag.id}) }}">{{tag.name}}</a>
+                            <a class="badge text-bg-success py-2" href="{{ path('app_map_filter_tag',{'id':tag.id}) }}">{{tag.name}}</a>
                         {% endfor %}
                     {% endif %}
                 </div>

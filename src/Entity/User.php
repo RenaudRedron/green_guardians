@@ -492,7 +492,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->birth;
     }
 
-    public function setBirth(\DateTimeImmutable $birth): static
+    public function setBirth(?\DateTimeImmutable $birth): static
     {
         $this->birth = $birth;
 
